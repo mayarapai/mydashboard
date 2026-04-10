@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מגדל ביטוח — לוח בקרה</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#1a4a8a;
+  --primary-light:#2563eb;
+  --green:#16a34a;
+  --red:#dc2626;
+  --orange:#ea580c;
+  --bg:#f1f5f9;
+  --card:#fff;
+  --border:#e2e8f0;
+  --text:#1e293b;
+  --muted:#64748b;
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);direction:rtl}
+a{text-decoration:none;color:inherit}
+
+.header{background:var(--primary);color:#fff;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.logo{font-size:1.3rem;font-weight:700;letter-spacing:.5px}
+.logo span{color:#93c5fd}
+.nav{display:flex;gap:4px}
+.nav button{background:rgba(255,255,255,.1);border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.8rem;font-family:inherit;transition:background .2s}
+.nav button:hover{background:rgba(255,255,255,.2)}
+.nav button.active{background:#fff;color:var(--primary);font-weight:700}
+
+.filters-bar{background:#fff;border-bottom:1px solid var(--border);padding:8px 24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filters-bar select,.filters-bar input{border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:.8rem;font-family:inherit;background:#fff;color:var(--text);direction:rtl}
+.filters-bar input{flex:1;min-width:140px}
+.filters-bar label{font-size:.75rem;color:var(--muted);white-space:nowrap}
+
+.main{padding:20px 24px;max-width:1400px;margin:0 auto}
+.screen{display:none}
+.screen.active{display:block}
+
+.section-title{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:6px;border-bottom:2px solid var(--primary)}
+.sub-title{font-size:.95rem;font-weight:600;color:var(--text);margin:16px 0 8px}
+
+.view-toggle{display:flex;gap:4px;margin-bottom:18px;flex-wrap:wrap}
+.view-toggle button{border:1px solid var(--border);background:#fff;color:var(--muted);padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.8rem;font-family:inherit;transition:all .2s}
+.view-toggle button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px}
+.kpi-card{background:var(--card);border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);border-top:4px solid var(--primary);position:relative;overflow:hidden}
+.kpi-card .icon{font-size:1.6rem;margin-bottom:6px}
+.kpi-card .label{font-size:.72rem;color:var(--muted);margin-bottom:4px}
+.kpi-card .value{font-size:1.35rem;font-weight:800;color:var(--text)}
+.kpi-card .sub{font-size:.72rem;color:var(--muted);margin-top:4px}
+.kpi-card .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700;margin-top:4px}
+.badge-green{background:#dcfce7;color:var(--green)}
+.badge-red{background:#fee2e2;color:var(--red)}
+.badge-orange{background:#ffedd5;color:var(--orange)}
+.badge-blue{background:#dbeafe;color:#1d4ed8}
+
+.cards-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:20px}
+
+.tbl-wrap{background:var(--card);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:#f8fafc;padding:10px 12px;text-align:right;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8fafc}
+.tbl-total td{background:#f0f9ff;font-weight:700;color:var(--primary)}
+
+.prog-wrap{display:flex;align-items:center;gap:6px}
+.prog-bar{flex:1;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;min-width:60px}
+.prog-fill{height:100%;border-radius:4px;transition:width .4s}
+.prog-lbl{font-size:.75rem;font-weight:700;min-width:36px;text-align:left}
+
+.pct-badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:700;cursor:pointer;transition:opacity .2s;white-space:nowrap}
+.pct-badge:hover{opacity:.8}
+
+.alerts{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.alert-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;font-size:.82rem}
+.alert-item .al-icon{font-size:1.1rem}
+.alert-danger{background:#fee2e2;border-right:4px solid var(--red)}
+.alert-warn{background:#ffedd5;border-right:4px solid var(--orange)}
+.alert-success{background:#dcfce7;border-right:4px solid var(--green)}
+.alert-info{background:#dbeafe;border-right:4px solid #2563eb}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr}}
+
+.panel{background:var(--card);border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.panel h4{font-size:.85rem;font-weight:700;color:var(--primary);margin-bottom:10px}
+
+.profit-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:.8rem}
+.profit-label{width:80px;text-align:right;color:var(--muted)}
+.profit-bar-wrap{flex:1;height:12px;background:#e2e8f0;border-radius:6px;overflow:hidden}
+.profit-bar-fill{height:100%;border-radius:6px}
+.profit-val{width:36px;font-weight:700;text-align:left}
+
+.heatmap-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.heat-cell{padding:10px 14px;border-radius:8px;font-size:.78rem;font-weight:700;min-width:100px;text-align:center;cursor:default}
+
+.back-btn{background:none;border:1px solid var(--primary);color:var(--primary);padding:5px 14px;border-radius:6px;cursor:pointer;font-size:.8rem;font-family:inherit;margin-bottom:12px;transition:background .2s}
+.back-btn:hover{background:var(--primary);color:#fff}
+
+.seg-basis{background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700}
+.seg-improve{background:#fef9c3;color:#b45309;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700}
+.seg-growth{background:#dcfce7;color:var(--green);padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700}
+.seg-none{background:#f1f5f9;color:var(--muted);padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700}
+
+.world-tabs{display:flex;gap:8px;margin-bottom:16px}
+.world-tab{padding:7px 18px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:.83rem;font-family:inherit;color:var(--muted);transition:all .2s}
+.world-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+.metric-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.8rem}
+.metric-label{min-width:90px;color:var(--muted);text-align:right}
+.metric-bar-wrap{flex:1;height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}
+.metric-bar-fill{height:100%;border-radius:5px}
+.metric-val{min-width:38px;text-align:left;font-weight:700}
+
+.coll-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.coll-cell{background:#f8fafc;border-radius:6px;padding:8px;text-align:center}
+.coll-cell .cv{font-size:1rem;font-weight:800;color:var(--primary)}
+.coll-cell .cl{font-size:.68rem;color:var(--muted)}
+
+.traffic-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.tl-item{display:flex;align-items:center;gap:6px;font-size:.8rem;padding:5px 12px;border-radius:20px;background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.tl-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+
+#s0-pie-svg{display:block;margin:0 auto}
+
+.lin-chart-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:.79rem}
+.lin-branch-name{min-width:110px;text-align:right;color:var(--text)}
+.lin-bar-wrap{flex:1;height:16px;background:#e2e8f0;border-radius:6px;overflow:visible;position:relative}
+.lin-bar-fill{height:100%;border-radius:6px;position:absolute;top:0;right:0}
+.lin-marker{position:absolute;top:-3px;width:3px;height:22px;background:#1a4a8a;border-radius:2px;transform:translateX(50%)}
+.lin-vals{min-width:90px;text-align:left;font-size:.75rem;color:var(--muted)}
+
+.controls-row{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.controls-row input{border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:.82rem;font-family:inherit;direction:rtl;flex:1;min-width:140px}
+.level-btn{border:1px solid var(--border);background:#fff;color:var(--muted);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:.78rem;font-family:inherit;transition:all .2s}
+.level-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.toggle-btn{border:1px solid var(--border);background:#fff;color:var(--muted);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:.78rem;font-family:inherit;transition:all .2s}
+.toggle-btn.active{background:#0f172a;color:#fff;border-color:#0f172a}
+
+.agents-layout{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:800px){.agents-layout{grid-template-columns:1fr}}
+
+.status-note{font-size:.75rem;color:var(--muted);margin-top:10px;padding:6px 12px;background:#f8fafc;border-radius:6px;border-right:3px solid var(--primary)}
+
+.quality-card{background:var(--card);border-radius:10px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.quality-card h4{font-size:.88rem;font-weight:700;color:var(--primary);margin-bottom:10px}
+
+.rider-detail{margin-top:8px}
+.rider-row{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;padding:3px 0;border-bottom:1px solid #f1f5f9}
+.rider-row:last-child{border-bottom:none}
+
+.box-compare{display:flex;gap:8px;margin-top:6px}
+.cmp-box{flex:1;border-radius:8px;padding:10px;text-align:center}
+.cmp-box .cv{font-size:1.1rem;font-weight:800}
+.cmp-box .cl{font-size:.68rem;margin-top:2px}
+
+.show-all-btn{display:block;width:100%;text-align:center;padding:8px;border:1px dashed var(--border);border-radius:6px;color:var(--muted);font-size:.8rem;cursor:pointer;margin-top:8px;background:none;font-family:inherit;transition:background .2s}
+.show-all-btn:hover{background:#f8fafc}
+
+.screen-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:8px}
+.screen-header h2{font-size:1.05rem;font-weight:700;color:var(--primary)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">מגדל <span>ביטוח</span></div>
+  <nav class="nav">
+    <button class="active" onclick="showScreen(0,this)">תמונת על</button>
+    <button onclick="showScreen('exec',this)">מבט הנהלה — אלמנטר</button>
+    <button onclick="showScreen(1,this)">ביצועים</button>
+    <button onclick="showScreen(2,this)">סוכנים</button>
+    <button onclick="showScreen(3,this)">פרופיל סוכן</button>
+  </nav>
+</div>
+
+<div class="filters-bar">
+  <label>ענף:</label>
+  <select>
+    <option>כל הענפים</option>
+    <option>רכב רכוש</option>
+    <option>רכב חובה</option>
+    <option>בתי עסק</option>
+    <option>עסקים גדולים</option>
+    <option>נישות</option>
+    <option>דירות</option>
+    <option>קבלנים</option>
+    <option>צ.מ.ה</option>
+    <option>ימי</option>
+    <option>תאונות אישיות</option>
+  </select>
+  <label>תקופה:</label>
+  <select>
+    <option>מרץ 2026</option>
+    <option>פברואר 2026</option>
+    <option>ינואר 2026</option>
+    <option>Q1 2026</option>
+    <option>2026 YTD</option>
+  </select>
+  <label>סוכנות:</label>
+  <select>
+    <option>כל הסוכנויות</option>
+    <option>סוכנות א׳</option>
+    <option>סוכנות ב׳</option>
+    <option>סוכנות ג׳</option>
+  </select>
+  <label>סגמנט:</label>
+  <select>
+    <option>כל הסגמנטים</option>
+    <option>בסיס</option>
+    <option>שיפור</option>
+    <option>צמיחה</option>
+  </select>
+  <input type="text" placeholder="חיפוש חופשי...">
+</div>
+
+<!-- SCREEN 0 -->
+<div class="screen active" id="screen0">
+  <div class="main">
+    <div class="screen-header">
+      <h2>תמונת על — הנהלה</h2>
+      <div class="view-toggle" id="s0-view-toggle">
+        <button class="active" onclick="setS0View('mtd',this)">MTD</button>
+        <button onclick="setS0View('ytd',this)">YTD</button>
+        <button onclick="setS0View('pct',this)">% עמידה ביעד</button>
+        <button onclick="setS0View('yoy',this)">מול אשתקד</button>
+      </div>
+    </div>
+    <div id="s0-kpi-grid" class="kpi-grid"></div>
+    <div class="grid2">
+      <div class="panel">
+        <h4>התפלגות פרמיה (YTD) — תרשים עוגה</h4>
+        <svg id="s0-pie-svg" width="220" height="220" viewBox="0 0 220 220"></svg>
+        <div id="s0-pie-legend" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px"></div>
+      </div>
+      <div class="panel">
+        <h4>רווחיות לפי ענף</h4>
+        <div id="s0-profit-bars"></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:20px">
+      <h4>התראות</h4>
+      <div class="alerts">
+        <div class="alert-item alert-danger"><span class="al-icon">🚨</span><span>רכב רכוש: עמידה ביעד 68.1% — מתחת ל-70%</span></div>
+        <div class="alert-item alert-danger"><span class="al-icon">🚨</span><span>דירה: עמידה ביעד 78.1% — צפי לפספוס שנתי</span></div>
+        <div class="alert-item alert-warn"><span class="al-icon">⚠️</span><span>בריאות: ירידה מאשתקד 2.1% — דורש תשומת לב</span></div>
+        <div class="alert-item alert-success"><span class="al-icon">✅</span><span>פנסיה וגמל: 106.6% מהיעד — מעל היעד!</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h4>ביצועים לפי ענף</h4>
+      <div class="tbl-wrap" style="margin-top:10px">
+        <table>
+          <thead>
+            <tr>
+              <th>ענף</th>
+              <th id="s0-col-main">MTD (₪M)</th>
+              <th>יעד שנתי</th>
+              <th>% עמידה</th>
+              <th>מול אשתקד</th>
+            </tr>
+          </thead>
+          <tbody id="s0-branch-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN EXEC -->
+<div class="screen" id="screenexec">
+  <div class="main">
+    <div class="screen-header">
+      <h2>מבט הנהלה — ענפי אלמנטר</h2>
+      <div class="view-toggle" id="exec-view-toggle">
+        <button class="active" onclick="setExecView('ytd',this)">YTD</button>
+        <button onclick="setExecView('mtd',this)">MTD</button>
+        <button onclick="setExecView('pct',this)">% עמידה ביעד</button>
+        <button onclick="setExecView('lin',this)">ביחס לקצב לינארי</button>
+        <button onclick="setExecView('yoy',this)">מול אשתקד</button>
+      </div>
+    </div>
+    <div id="exec-kpi-grid" class="kpi-grid"></div>
+    <div class="grid2">
+      <div class="panel">
+        <h4>ביצועים לפי ענף — קצב לינארי</h4>
+        <div id="exec-linear-chart"></div>
+      </div>
+      <div class="panel">
+        <h4>מפת חום — עמידה ביעד</h4>
+        <div id="exec-heatmap" class="heatmap-grid"></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:20px">
+      <h4>התראות</h4>
+      <div id="exec-alerts" class="alerts"></div>
+    </div>
+    <div class="tbl-wrap" style="margin-bottom:20px">
+      <table>
+        <thead>
+          <tr>
+            <th>ענף</th>
+            <th id="exec-col-main">YTD (₪M)</th>
+            <th id="exec-col-sec">יעד שנתי</th>
+            <th>% עמידה</th>
+            <th id="exec-col-lin">קצב לינארי %</th>
+            <th id="exec-col-yoy">מול אשתקד</th>
+            <th>חידושים %</th>
+          </tr>
+        </thead>
+        <tbody id="exec-branch-rows"></tbody>
+      </table>
+    </div>
+    <div class="sub-title">איכות פורטפוליו</div>
+    <div class="grid3" id="exec-quality-cards"></div>
+  </div>
+</div>
+
+<!-- SCREEN 1 -->
+<div class="screen" id="screen1">
+  <div class="main">
+    <div class="screen-header">
+      <h2>מסך 1 — ביצועים</h2>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card" style="border-color:#1a4a8a">
+        <div class="label">פרמיה חודשית</div>
+        <div class="value">₪18.4M</div>
+        <div class="sub">MTD מרץ 2026</div>
+      </div>
+      <div class="kpi-card" style="border-color:#7c3aed">
+        <div class="label">כמות פוליסות</div>
+        <div class="value">4,821</div>
+        <div class="sub">חודש שוטף</div>
+      </div>
+      <div class="kpi-card" style="border-color:#ea580c">
+        <div class="label">עמידה ביעד פרמיה</div>
+        <div class="value">68%</div>
+        <div><span class="badge badge-orange">מתחת ליעד</span></div>
+      </div>
+      <div class="kpi-card" style="border-color:#0891b2">
+        <div class="label">עמידה ביעד כמות</div>
+        <div class="value">71%</div>
+        <div><span class="badge badge-orange">מתחת ליעד</span></div>
+      </div>
+      <div class="kpi-card" style="border-color:#16a34a">
+        <div class="label">חידושים</div>
+        <div class="value">84%</div>
+        <div><span class="badge badge-green">תקין</span></div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>שם ענף</th>
+            <th>פרמיה WP (₪M)</th>
+            <th>כמות</th>
+            <th>פרמיה 2025 (₪M)</th>
+            <th>כמות 2025</th>
+            <th>% יעד-פרמיה</th>
+            <th>% יעד-כמות</th>
+            <th>קצב לינארי %</th>
+            <th>% חידושים</th>
+          </tr>
+        </thead>
+        <tbody id="s1-rows"></tbody>
+      </table>
+    </div>
+    <div class="traffic-row" id="s1-traffic"></div>
+    <div class="status-note">לחצו על אחוז עמידה ביעד כדי לראות פירוט סוכנים לאותו ענף</div>
+  </div>
+</div>
+
+<!-- SCREEN 2 -->
+<div class="screen" id="screen2">
+  <div class="main">
+    <div class="screen-header">
+      <div>
+        <button class="back-btn" onclick="showScreen(1,document.querySelectorAll('.nav button')[2])">חזרה לביצועים</button>
+        <h2 id="s2-title">סוכנים — רכב רכוש</h2>
+      </div>
+    </div>
+    <div class="controls-row">
+      <button class="toggle-btn active" onclick="s2ToggleView('top',this)">Top 10</button>
+      <button class="toggle-btn" onclick="s2ToggleView('bottom',this)">Bottom 10</button>
+      <button class="level-btn active" onclick="s2SetLevel('סוכן',this)">סוכן</button>
+      <button class="level-btn" onclick="s2SetLevel('סוכנות',this)">סוכנות</button>
+      <button class="level-btn" onclick="s2SetLevel('סגמנט',this)">סגמנט</button>
+      <input type="text" placeholder="חיפוש סוכן..." oninput="renderAgents()">
+    </div>
+    <div class="agents-layout">
+      <div>
+        <div class="sub-title">10 מובילים</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>#</th><th>שם</th><th>סוכנות</th><th>סגמנט</th><th>% פרמיה</th><th>% כמות</th><th>תרומה %</th><th>חידוש %</th></tr></thead>
+            <tbody id="s2-top-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sub-title">10 נמוכים</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>#</th><th>שם</th><th>סוכנות</th><th>סגמנט</th><th>% פרמיה</th><th>% כמות</th><th>תרומה %</th><th>חידוש %</th></tr></thead>
+            <tbody id="s2-bot-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <button class="show-all-btn">הצג את כולם</button>
+  </div>
+</div>
+
+<!-- SCREEN 3 -->
+<div class="screen" id="screen3">
+  <div class="main">
+    <button class="back-btn" onclick="showScreen(2,document.querySelectorAll('.nav button')[3])">חזרה לסוכנים</button>
+    <div class="screen-header">
+      <div>
+        <h2 id="s3-name">פרופיל סוכן</h2>
+        <span id="s3-seg-badge"></span>
+      </div>
+    </div>
+    <div class="world-tabs">
+      <button class="world-tab active" onclick="showWorld('car',this)">🚗 רכב</button>
+      <button class="world-tab" onclick="showWorld('apt',this)">🏠 דירות</button>
+      <button class="world-tab" onclick="showWorld('biz',this)">🏢 עסקים</button>
+    </div>
+
+    <div id="s3-world-car">
+      <div class="grid2">
+        <div class="panel">
+          <h4>רכב חובה</h4>
+          <div style="font-size:.78rem;color:var(--muted);margin-bottom:8px">יחס חובה/רכוש</div>
+          <div class="metric-row">
+            <span class="metric-label">סוכן</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:72%;background:#dc2626"></div></div>
+            <span class="metric-val">0.72</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">ממוצע חברה</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:85%;background:#94a3b8"></div></div>
+            <span class="metric-val">0.85</span>
+          </div>
+          <div class="alert-item alert-warn" style="margin-top:8px;font-size:.78rem"><span class="al-icon">⚠️</span><span>יחס חובה נמוך מממוצע החברה — מומלץ לחזק</span></div>
+          <div class="coll-grid">
+            <div class="coll-cell"><div class="cv">142</div><div class="cl">פוליסות חובה</div></div>
+            <div class="coll-cell"><div class="cv">₪3.8M</div><div class="cl">פרמיה YTD</div></div>
+            <div class="coll-cell"><div class="cv">87%</div><div class="cl">חידושים</div></div>
+            <div class="coll-cell"><div class="cv">4.2%</div><div class="cl">תביעות</div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h4>רכב רכוש</h4>
+          <div style="font-size:.78rem;color:var(--muted);margin-bottom:6px">מוסכים מוסדרים</div>
+          <div class="metric-row">
+            <span class="metric-label">סוכן</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:78%;background:#dc2626"></div></div>
+            <span class="metric-val">78%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">שנה קודמת</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:72%;background:#f87171"></div></div>
+            <span class="metric-val">72%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">ממוצע חברה</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:71%;background:#94a3b8"></div></div>
+            <span class="metric-val">71%</span>
+          </div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:12px;margin-bottom:6px">רוכבים — 41% (ממוצע: 67%)</div>
+          <div class="alert-item alert-danger" style="margin-bottom:8px;font-size:.78rem"><span class="al-icon">🚨</span><span>אחוז רוכבים נמוך מהממוצע — 41% מול 67%</span></div>
+          <div class="rider-detail">
+            <div class="rider-row"><span>זכוכית</span><span style="color:var(--red);font-weight:700">18%</span></div>
+            <div class="rider-row"><span>גרירה</span><span style="color:var(--orange);font-weight:700">22%</span></div>
+            <div class="rider-row"><span>רכב חלופי</span><span style="color:var(--red);font-weight:700">15%</span></div>
+            <div class="rider-row"><span>אובדן שימוש</span><span style="color:var(--green);font-weight:700">48%</span></div>
+            <div class="rider-row"><span>הרחבה לחו"ל</span><span style="color:var(--orange);font-weight:700">31%</span></div>
+          </div>
+          <div class="coll-grid" style="margin-top:10px">
+            <div class="coll-cell"><div class="cv">198</div><div class="cl">פוליסות רכוש</div></div>
+            <div class="coll-cell"><div class="cv">₪5.2M</div><div class="cl">פרמיה YTD</div></div>
+            <div class="coll-cell"><div class="cv">83%</div><div class="cl">חידושים</div></div>
+            <div class="coll-cell"><div class="cv">6.1%</div><div class="cl">תביעות</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="s3-world-apt" style="display:none">
+      <div class="grid2">
+        <div class="panel">
+          <h4>דירה 180 — ניתוח פורטפוליו</h4>
+          <div style="font-size:.78rem;color:var(--muted);margin-bottom:6px">סכום ביטוח / אחודות</div>
+          <div class="metric-row">
+            <span class="metric-label">SA ממוצע</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:68%;background:#16a34a"></div></div>
+            <span class="metric-val">₪1.2M</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">אחודות</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:45%;background:#ea580c"></div></div>
+            <span class="metric-val">45%</span>
+          </div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:10px;margin-bottom:6px">שרברב</div>
+          <div class="metric-row"><span class="metric-label">הסדר</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:52%;background:#16a34a"></div></div><span class="metric-val">52%</span></div>
+          <div class="metric-row"><span class="metric-label">פרטי</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:31%;background:#ea580c"></div></div><span class="metric-val">31%</span></div>
+          <div class="metric-row"><span class="metric-label">ללא</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:17%;background:#dc2626"></div></div><span class="metric-val">17%</span></div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:10px;margin-bottom:6px">רעידת אדמה (ר"א)</div>
+          <div class="metric-row"><span class="metric-label">2026</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:74%;background:#1a4a8a"></div></div><span class="metric-val">74%</span></div>
+          <div class="metric-row"><span class="metric-label">2025</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:68%;background:#2563eb"></div></div><span class="metric-val">68%</span></div>
+          <div class="metric-row"><span class="metric-label">ממוצע</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:71%;background:#94a3b8"></div></div><span class="metric-val">71%</span></div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:10px;margin-bottom:6px">קומת ביניים</div>
+          <div class="box-compare">
+            <div class="cmp-box" style="background:#fee2e2"><div class="cv" style="color:var(--red)">207</div><div class="cl" style="color:var(--red)">סוכן</div></div>
+            <div class="cmp-box" style="background:#f1f5f9"><div class="cv" style="color:var(--muted)">683</div><div class="cl" style="color:var(--muted)">ממוצע</div></div>
+          </div>
+          <div class="coll-grid" style="margin-top:10px">
+            <div class="coll-cell"><div class="cv">180</div><div class="cl">פוליסות דירה</div></div>
+            <div class="coll-cell"><div class="cv">₪2.1M</div><div class="cl">פרמיה YTD</div></div>
+            <div class="coll-cell"><div class="cv">91%</div><div class="cl">חידושים</div></div>
+            <div class="coll-cell"><div class="cv">2.8%</div><div class="cl">תביעות</div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h4>משכנתא 328</h4>
+          <div class="metric-row"><span class="metric-label">סוכן YTD</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:82%;background:#16a34a"></div></div><span class="metric-val">₪3.4M</span></div>
+          <div class="metric-row"><span class="metric-label">2025</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:75%;background:#94a3b8"></div></div><span class="metric-val">₪3.1M</span></div>
+          <div class="alert-item alert-success" style="margin-top:8px;font-size:.78rem"><span class="al-icon">✅</span><span>גידול של 9.7% במשכנתאות מאשתקד</span></div>
+          <div class="coll-grid" style="margin-top:10px">
+            <div class="coll-cell"><div class="cv">328</div><div class="cl">פוליסות משכנתא</div></div>
+            <div class="coll-cell"><div class="cv">₪3.4M</div><div class="cl">פרמיה YTD</div></div>
+            <div class="coll-cell"><div class="cv">94%</div><div class="cl">חידושים</div></div>
+            <div class="coll-cell"><div class="cv">1.2%</div><div class="cl">תביעות</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="s3-world-biz" style="display:none">
+      <div class="grid2">
+        <div class="panel">
+          <h4>נישות</h4>
+          <div class="metric-row"><span class="metric-label">סוכן YTD</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:88%;background:#6d28d9"></div></div><span class="metric-val">₪1.4M</span></div>
+          <div class="metric-row"><span class="metric-label">2025</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:77%;background:#94a3b8"></div></div><span class="metric-val">₪1.26M</span></div>
+          <div class="alert-item alert-success" style="margin-top:8px;font-size:.78rem"><span class="al-icon">✅</span><span>גידול +11% בנישות מאשתקד</span></div>
+          <div class="coll-grid" style="margin-top:10px">
+            <div class="coll-cell"><div class="cv">67</div><div class="cl">פוליסות נישות</div></div>
+            <div class="coll-cell"><div class="cv">₪1.4M</div><div class="cl">פרמיה YTD</div></div>
+            <div class="coll-cell"><div class="cv">79%</div><div class="cl">חידושים</div></div>
+            <div class="coll-cell"><div class="cv">5.3%</div><div class="cl">תביעות</div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h4>עסק מרחבי</h4>
+          <div class="metric-row"><span class="metric-label">סוכן YTD</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:62%;background:#dc2626"></div></div><span class="metric-val">₪2.1M</span></div>
+          <div class="metric-row"><span class="metric-label">2025</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:72%;background:#94a3b8"></div></div><span class="metric-val">₪2.44M</span></div>
+          <div class="alert-item alert-danger" style="margin-top:8px;font-size:.78rem"><span class="al-icon">🚨</span><span>ירידה של 14% בעסק מרחבי מאשתקד</span></div>
+          <div class="coll-grid" style="margin-top:10px">
+            <div class="coll-cell"><div class="cv">43</div><div class="cl">פוליסות עסק</div></div>
+            <div class="coll-cell"><div class="cv">₪2.1M</div><div class="cl">פרמיה YTD</div></div>
+            <div class="coll-cell"><div class="cv">62%</div><div class="cl">חידושים</div></div>
+            <div class="coll-cell"><div class="cv">8.7%</div><div class="cl">תביעות</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var s0Data = [
+  {name:'ביטוח חיים',   icon:'💼', color:'#7c3aed', mtd:4.8,  ytd:42.1, target:48,   pct:87.7, profit:92, yoy:4.2},
+  {name:'ביטוח בריאות', icon:'🏥', color:'#0891b2', mtd:3.1,  ytd:28.4, target:30,   pct:94.7, profit:78, yoy:-2.1},
+  {name:'ביטוח רכב',    icon:'🚗', color:'#dc2626', mtd:2.1,  ytd:18.4, target:27,   pct:68.1, profit:61, yoy:-5.8},
+  {name:'ביטוח דירה',   icon:'🏠', color:'#16a34a', mtd:0.93, ytd:8.2,  target:10.5, pct:78.1, profit:74, yoy:1.9},
+  {name:'פנסיה וגמל',   icon:'📈', color:'#ea580c', mtd:6.8,  ytd:61.8, target:58,   pct:106.6,profit:88, yoy:8.4}
+];
+
+var execBranches = [
+  {id:'car1', name:'רכב רכוש',      world:'car',   color:'#dc2626', ytd_p:5.2, ytd_t:26,   mtd_p:1.8,  mtd_t:8.7,  ytdPct:82, linPct:96, yoy_chg:6.2,  renewal:83},
+  {id:'car2', name:'רכב חובה',      world:'car',   color:'#f87171', ytd_p:2.1, ytd_t:11.2, mtd_p:0.7,  mtd_t:3.7,  ytdPct:79, linPct:92, yoy_chg:2.4,  renewal:87},
+  {id:'biz1', name:'בתי עסק',       world:'biz',   color:'#7c3aed', ytd_p:3.4, ytd_t:24.8, mtd_p:1.1,  mtd_t:8.3,  ytdPct:54, linPct:64, yoy_chg:6.3,  renewal:71},
+  {id:'biz2', name:'עסקים גדולים',  world:'biz',   color:'#a78bfa', ytd_p:4.8, ytd_t:96,   mtd_p:1.6,  mtd_t:32,   ytdPct:19, linPct:23, yoy_chg:-1.2, renewal:62},
+  {id:'biz3', name:'נישות',         world:'biz',   color:'#6d28d9', ytd_p:1.6, ytd_t:9,    mtd_p:0.53, mtd_t:3,    ytdPct:71, linPct:85, yoy_chg:7.1,  renewal:79},
+  {id:'hom1', name:'דירות',         world:'home',  color:'#16a34a', ytd_p:2.8, ytd_t:14.4, mtd_p:0.93, mtd_t:4.8,  ytdPct:77, linPct:92, yoy_chg:7.7,  renewal:88},
+  {id:'biz4', name:'קבלנים',        world:'biz',   color:'#b45309', ytd_p:1.0, ytd_t:24,   mtd_p:0.33, mtd_t:8,    ytdPct:16, linPct:19, yoy_chg:3.2,  renewal:74},
+  {id:'oth1', name:'צ.מ.ה',         world:'other', color:'#6b7280', ytd_p:0.4, ytd_t:3.8,  mtd_p:0.14, mtd_t:1.25, ytdPct:44, linPct:52, yoy_chg:2.4,  renewal:68},
+  {id:'oth2', name:'ימי',           world:'other', color:'#9ca3af', ytd_p:0.3, ytd_t:2.8,  mtd_p:0.09, mtd_t:0.93, ytdPct:40, linPct:47, yoy_chg:-3.1, renewal:65},
+  {id:'oth3', name:'תאונות אישיות',world:'other', color:'#0891b2', ytd_p:0.5, ytd_t:4.8,  mtd_p:0.17, mtd_t:1.6,  ytdPct:43, linPct:51, yoy_chg:4.2,  renewal:77}
+];
+
+var s1RowsData = [
+  {name:'רכב רכוש',    wp:5.2, qty:1240, wp25:4.9,  qty25:1180, pPct:82, qPct:80, lin:96, ren:83},
+  {name:'רכב חובה',    wp:2.1, qty:890,  wp25:2.05, qty25:870,  pPct:79, qPct:76, lin:92, ren:87},
+  {name:'בתי עסק',     wp:3.4, qty:420,  wp25:3.2,  qty25:400,  pPct:54, qPct:57, lin:64, ren:71},
+  {name:'עסקים גדולים',wp:4.8, qty:38,   wp25:4.85, qty25:40,   pPct:19, qPct:21, lin:23, ren:62},
+  {name:'נישות',       wp:1.6, qty:310,  wp25:1.48, qty25:292,  pPct:71, qPct:69, lin:85, ren:79},
+  {name:'דירות',       wp:2.8, qty:680,  wp25:2.6,  qty25:630,  pPct:77, qPct:79, lin:92, ren:88},
+  {name:'קבלנים',      wp:1.0, qty:58,   wp25:0.97, qty25:56,   pPct:16, qPct:18, lin:19, ren:74},
+  {name:'צ.מ.ה',       wp:0.4, qty:72,   wp25:0.39, qty25:70,   pPct:44, qPct:46, lin:52, ren:68}
+];
+
+var agentsTop = [
+  {rank:1,  name:'דוד לוי',     agency:'סוכנות הצלחה', seg:'growth',  pPct:142, qPct:138, contrib:8.4, ren:94},
+  {rank:2,  name:'שרה כהן',     agency:'כהן ביטוח',    seg:'growth',  pPct:131, qPct:125, contrib:7.1, ren:91},
+  {rank:3,  name:'משה ישראלי',  agency:'מגן אור',       seg:'growth',  pPct:128, qPct:119, contrib:6.8, ren:89},
+  {rank:4,  name:'רחל גולדברג', agency:'סוכנות הנגב',  seg:'improve', pPct:118, qPct:112, contrib:5.9, ren:87},
+  {rank:5,  name:'אלי אברהם',   agency:'אברהם ושות',   seg:'improve', pPct:114, qPct:108, contrib:5.4, ren:86},
+  {rank:6,  name:'מרים שפירא',  agency:'כהן ביטוח',    seg:'improve', pPct:109, qPct:103, contrib:4.9, ren:84},
+  {rank:7,  name:'יוסי כץ',     agency:'מגן אור',       seg:'basis',   pPct:104, qPct:98,  contrib:4.2, ren:82},
+  {rank:8,  name:'חנה ברק',     agency:'סוכנות הצלחה', seg:'improve', pPct:101, qPct:96,  contrib:3.8, ren:81},
+  {rank:9,  name:'אריה פרץ',    agency:'סוכנות הנגב',  seg:'basis',   pPct:98,  qPct:93,  contrib:3.4, ren:79},
+  {rank:10, name:'שמואל אדלר',  agency:'אדלר ביטוח',   seg:'basis',   pPct:96,  qPct:91,  contrib:3.1, ren:78}
+];
+
+var agentsBottom = [
+  {rank:1,  name:'נחום שטיין',  agency:'שטיין סוכנות', seg:'none',    pPct:34, qPct:31, contrib:0.8, ren:41},
+  {rank:2,  name:'בתיה מלמד',   agency:'מלמד ביטוח',   seg:'none',    pPct:38, qPct:35, contrib:0.9, ren:44},
+  {rank:3,  name:'ציון חמו',    agency:'חמו ושות',      seg:'none',    pPct:41, qPct:39, contrib:1.1, ren:48},
+  {rank:4,  name:'תמר ניר',     agency:'ניר סוכנות',   seg:'none',    pPct:44, qPct:42, contrib:1.2, ren:51},
+  {rank:5,  name:'ברוך ויס',    agency:'ויס ביטוח',    seg:'basis',   pPct:48, qPct:44, contrib:1.4, ren:54},
+  {rank:6,  name:'חיים עוז',    agency:'עוז ושות',     seg:'basis',   pPct:51, qPct:48, contrib:1.6, ren:57},
+  {rank:7,  name:'פנינה גרוס',  agency:'גרוס סוכנות',  seg:'basis',   pPct:54, qPct:52, contrib:1.7, ren:59},
+  {rank:8,  name:'אברהם סלע',   agency:'סלע ביטוח',    seg:'basis',   pPct:57, qPct:55, contrib:1.9, ren:62},
+  {rank:9,  name:'לאה בן דוד',  agency:'בן דוד סוכנות',seg:'improve', pPct:61, qPct:58, contrib:2.1, ren:65},
+  {rank:10, name:'אסתר כחלון',  agency:'כחלון ביטוח',  seg:'improve', pPct:64, qPct:61, contrib:2.3, ren:67}
+];
+
+var segLabels = {growth:'צמיחה', improve:'שיפור', basis:'בסיס', none:'—'};
+var segClasses = {growth:'seg-growth', improve:'seg-improve', basis:'seg-basis', none:'seg-none'};
+
+var currentS0View = 'mtd';
+var currentExecView = 'ytd';
+var currentS2Branch = 'רכב רכוש';
+
+function pctColor(v) {
+  if (v >= 90) { return '#16a34a'; }
+  if (v >= 70) { return '#ea580c'; }
+  return '#dc2626';
+}
+
+function pctBadge(v, branchName) {
+  var c = pctColor(v);
+  var bg = v >= 90 ? '#dcfce7' : (v >= 70 ? '#ffedd5' : '#fee2e2');
+  var bn = branchName ? branchName.replace(/'/g, "\\'") : '';
+  return '<span class="pct-badge" style="background:' + bg + ';color:' + c + '" onclick="drillToAgents(\'' + bn + '\')">' + v + '%</span>';
+}
+
+function fmtYoy(v) {
+  if (v > 0) { return '<span style="color:#16a34a;font-weight:700">+' + v + '%</span>'; }
+  if (v < 0) { return '<span style="color:#dc2626;font-weight:700">' + v + '%</span>'; }
+  return '<span>' + v + '%</span>';
+}
+
+function progBar(pct, color) {
+  var c = color || pctColor(pct);
+  var w = Math.min(pct, 100);
+  return '<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:' + w + '%;background:' + c + '"></div></div><span class="prog-lbl" style="color:' + c + '">' + pct + '%</span></div>';
+}
+
+var navMap = {'0':0, 'exec':1, '1':2, '2':3, '3':4};
+
+function showScreen(n, btn) {
+  var screens = document.querySelectorAll('.screen');
+  for (var i = 0; i < screens.length; i++) {
+    screens[i].classList.remove('active');
+  }
+  var scId = (n === 'exec') ? 'screenexec' : ('screen' + n);
+  var el = document.getElementById(scId);
+  if (el) { el.classList.add('active'); }
+  var navBtns = document.querySelectorAll('.nav button');
+  var idx = navMap[String(n)];
+  for (var j = 0; j < navBtns.length; j++) {
+    navBtns[j].classList.toggle('active', j === idx);
+  }
+  if (n === 2) { renderAgents(); }
+  if (n === 'exec') { renderExecScreen(); }
+  if (n === 0) { renderS0Screen(); }
+}
+
+function drillToAgents(name) {
+  currentS2Branch = name || 'רכב רכוש';
+  var el = document.getElementById('s2-title');
+  if (el) { el.textContent = 'סוכנים — ' + currentS2Branch; }
+  var navBtns = document.querySelectorAll('.nav button');
+  showScreen(2, navBtns[3]);
+}
+
+function openAgent(name, seg) {
+  var n = document.getElementById('s3-name');
+  var sb = document.getElementById('s3-seg-badge');
+  if (n) { n.textContent = name; }
+  if (sb) {
+    var cls = segClasses[seg] || 'seg-none';
+    var lbl = segLabels[seg] || '—';
+    sb.innerHTML = '<span class="' + cls + '">' + lbl + '</span>';
+  }
+  var navBtns = document.querySelectorAll('.nav button');
+  showScreen(3, navBtns[4]);
+}
+
+function showWorld(w, btn) {
+  var tabs = document.querySelectorAll('.world-tab');
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].classList.remove('active');
+  }
+  if (btn) { btn.classList.add('active'); }
+  var worlds = ['car', 'apt', 'biz'];
+  for (var j = 0; j < worlds.length; j++) {
+    var el = document.getElementById('s3-world-' + worlds[j]);
+    if (el) { el.style.display = (worlds[j] === w) ? '' : 'none'; }
+  }
+}
+
+function s2ToggleView(which, btn) {
+  var btns = document.querySelectorAll('#screen2 .toggle-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('active');
+  }
+  if (btn) { btn.classList.add('active'); }
+}
+
+function s2SetLevel(lvl, btn) {
+  var btns = document.querySelectorAll('#screen2 .level-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('active');
+  }
+  if (btn) { btn.classList.add('active'); }
+}
+
+function setS0View(v, btn) {
+  currentS0View = v;
+  var btns = document.querySelectorAll('#s0-view-toggle button');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('active');
+  }
+  if (btn) { btn.classList.add('active'); }
+  renderS0KPIs();
+  renderS0BranchRows();
+}
+
+function renderS0KPIs() {
+  var grid = document.getElementById('s0-kpi-grid');
+  if (!grid) { return; }
+  var v = currentS0View;
+  var totalMtd = 0, totalYtd = 0, totalTarget = 0, totalProfit = 0, totalYoy = 0;
+  for (var i = 0; i < s0Data.length; i++) {
+    totalMtd += s0Data[i].mtd;
+    totalYtd += s0Data[i].ytd;
+    totalTarget += s0Data[i].target;
+    totalProfit += s0Data[i].profit;
+    totalYoy += s0Data[i].yoy;
+  }
+  var totalPct = Math.round(totalYtd / totalTarget * 1000) / 10;
+  var avgProfit = Math.round(totalProfit / s0Data.length);
+  var avgYoy = Math.round(totalYoy / s0Data.length * 10) / 10;
+
+  var html = '';
+  for (var k = 0; k < s0Data.length; k++) {
+    var d = s0Data[k];
+    var mainVal, subTxt, bColor;
+    if (v === 'mtd') {
+      mainVal = '₪' + d.mtd + 'M';
+      subTxt = 'MTD מרץ 2026';
+      bColor = d.color;
+    } else if (v === 'ytd') {
+      mainVal = '₪' + d.ytd + 'M';
+      subTxt = 'YTD 2026';
+      bColor = d.color;
+    } else if (v === 'pct') {
+      mainVal = d.pct + '%';
+      subTxt = 'מתוך יעד ₪' + d.target + 'M';
+      bColor = pctColor(d.pct);
+    } else {
+      mainVal = (d.yoy >= 0 ? '+' : '') + d.yoy + '%';
+      subTxt = 'שינוי מאשתקד';
+      bColor = d.yoy >= 0 ? '#16a34a' : '#dc2626';
+    }
+    html += '<div class="kpi-card" style="border-color:' + d.color + '">';
+    html += '<div class="icon">' + d.icon + '</div>';
+    html += '<div class="label">' + d.name + '</div>';
+    html += '<div class="value" style="color:' + bColor + '">' + mainVal + '</div>';
+    html += '<div class="sub">' + subTxt + '</div>';
+    html += '</div>';
+  }
+
+  var tMain, tSub, tColor;
+  if (v === 'mtd') {
+    tMain = '₪' + totalMtd.toFixed(1) + 'M';
+    tSub = 'סה"כ MTD';
+    tColor = '#1a4a8a';
+  } else if (v === 'ytd') {
+    tMain = '₪' + totalYtd.toFixed(1) + 'M';
+    tSub = 'סה"כ YTD';
+    tColor = '#1a4a8a';
+  } else if (v === 'pct') {
+    tMain = totalPct + '%';
+    tSub = 'עמידה ביעד כוללת';
+    tColor = pctColor(totalPct);
+  } else {
+    tMain = (avgYoy >= 0 ? '+' : '') + avgYoy + '%';
+    tSub = 'שינוי ממוצע';
+    tColor = avgYoy >= 0 ? '#16a34a' : '#dc2626';
+  }
+  html += '<div class="kpi-card" style="border-color:#1a4a8a;background:#f0f9ff">';
+  html += '<div class="icon">📊</div>';
+  html += '<div class="label">סה"כ כל הענפים</div>';
+  html += '<div class="value" style="color:' + tColor + '">' + tMain + '</div>';
+  html += '<div class="sub">' + tSub + '</div>';
+  html += '</div>';
+  grid.innerHTML = html;
+}
+
+function renderS0BranchRows() {
+  var tbody = document.getElementById('s0-branch-rows');
+  var colMain = document.getElementById('s0-col-main');
+  if (!tbody) { return; }
+  var v = currentS0View;
+  var labels = {mtd:'MTD (₪M)', ytd:'YTD (₪M)', pct:'% עמידה ביעד', yoy:'שינוי מאשתקד'};
+  if (colMain) { colMain.textContent = labels[v] || 'MTD (₪M)'; }
+  var html = '';
+  for (var i = 0; i < s0Data.length; i++) {
+    var d = s0Data[i];
+    var mainVal;
+    if (v === 'mtd') { mainVal = '₪' + d.mtd + 'M'; }
+    else if (v === 'ytd') { mainVal = '₪' + d.ytd + 'M'; }
+    else if (v === 'pct') { mainVal = pctBadge(d.pct, d.name); }
+    else { mainVal = fmtYoy(d.yoy); }
+    html += '<tr>';
+    html += '<td><span style="color:' + d.color + '">' + d.icon + '</span> ' + d.name + '</td>';
+    html += '<td>' + mainVal + '</td>';
+    html += '<td>₪' + d.target + 'M</td>';
+    html += '<td>' + progBar(d.pct) + '</td>';
+    html += '<td>' + fmtYoy(d.yoy) + '</td>';
+    html += '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function renderS0Pie() {
+  var svg = document.getElementById('s0-pie-svg');
+  var leg = document.getElementById('s0-pie-legend');
+  if (!svg) { return; }
+  var total = 0;
+  for (var i = 0; i < s0Data.length; i++) { total += s0Data[i].ytd; }
+  var cx = 110, cy = 110, r = 90;
+  var startAngle = -Math.PI / 2;
+  var paths = '';
+  for (var j = 0; j < s0Data.length; j++) {
+    var d = s0Data[j];
+    var frac = d.ytd / total;
+    var angle = frac * 2 * Math.PI;
+    var endAngle = startAngle + angle;
+    var x1 = cx + r * Math.cos(startAngle);
+    var y1 = cy + r * Math.sin(startAngle);
+    var x2 = cx + r * Math.cos(endAngle);
+    var y2 = cy + r * Math.sin(endAngle);
+    var large = angle > Math.PI ? 1 : 0;
+    paths += '<path d="M' + cx + ',' + cy + ' L' + x1.toFixed(1) + ',' + y1.toFixed(1) +
+      ' A' + r + ',' + r + ' 0 ' + large + ',1 ' + x2.toFixed(1) + ',' + y2.toFixed(1) +
+      ' Z" fill="' + d.color + '" stroke="#fff" stroke-width="2"/>';
+    startAngle = endAngle;
+  }
+  svg.innerHTML = paths;
+  if (leg) {
+    var lhtml = '';
+    for (var m = 0; m < s0Data.length; m++) {
+      lhtml += '<div style="display:flex;align-items:center;gap:4px;font-size:.72rem">';
+      lhtml += '<div style="width:10px;height:10px;border-radius:50%;background:' + s0Data[m].color + ';flex-shrink:0"></div>';
+      lhtml += '<span>' + s0Data[m].name + '</span></div>';
+    }
+    leg.innerHTML = lhtml;
+  }
+}
+
+function renderS0Profitability() {
+  var el = document.getElementById('s0-profit-bars');
+  if (!el) { return; }
+  var html = '';
+  for (var i = 0; i < s0Data.length; i++) {
+    var d = s0Data[i];
+    var c = d.profit >= 80 ? '#16a34a' : (d.profit >= 70 ? '#ea580c' : '#dc2626');
+    var shortName = d.name.replace('ביטוח ', '').replace('פנסיה וגמל', 'פנסיה');
+    html += '<div class="profit-row">';
+    html += '<span class="profit-label">' + d.icon + ' ' + shortName + '</span>';
+    html += '<div class="profit-bar-wrap"><div class="profit-bar-fill" style="width:' + d.profit + '%;background:' + c + '"></div></div>';
+    html += '<span class="profit-val" style="color:' + c + '">' + d.profit + '%</span>';
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderS0Screen() {
+  renderS0KPIs();
+  renderS0BranchRows();
+  renderS0Pie();
+  renderS0Profitability();
+}
+
+function branchViewVals(b, view) {
+  var main, sec;
+  if (view === 'ytd') {
+    main = '₪' + b.ytd_p + 'M';
+    sec = '₪' + b.ytd_t + 'M';
+  } else if (view === 'mtd') {
+    main = '₪' + b.mtd_p + 'M';
+    sec = '₪' + b.mtd_t + 'M';
+  } else if (view === 'pct') {
+    main = b.ytdPct + '%';
+    sec = b.linPct + '%';
+  } else if (view === 'lin') {
+    main = b.linPct + '%';
+    sec = b.ytdPct + '%';
+  } else {
+    main = (b.yoy_chg >= 0 ? '+' : '') + b.yoy_chg + '%';
+    sec = b.ytdPct + '%';
+  }
+  return {main: main, sec: sec, pct: b.ytdPct, lin: b.linPct, yoy: b.yoy_chg, ren: b.renewal};
+}
+
+function worldTotals(view) {
+  var worldDefs = [
+    {key:'car',   label:'עולם הרכב',    icon:'🚗', color:'#dc2626'},
+    {key:'home',  label:'עולם הדירות',  icon:'🏠', color:'#16a34a'},
+    {key:'biz',   label:'עולם העסקים',  icon:'🏢', color:'#7c3aed'},
+    {key:'other', label:'אחר',          icon:'📦', color:'#6b7280'}
+  ];
+  var result = [];
+  for (var wi = 0; wi < worldDefs.length; wi++) {
+    var wk = worldDefs[wi].key;
+    var branches = [];
+    for (var bi = 0; bi < execBranches.length; bi++) {
+      if (execBranches[bi].world === wk) { branches.push(execBranches[bi]); }
+    }
+    var totYtd = 0, totMtd = 0, sumPct = 0, sumLin = 0, sumYoy = 0;
+    for (var xi = 0; xi < branches.length; xi++) {
+      totYtd += branches[xi].ytd_p;
+      totMtd += branches[xi].mtd_p;
+      sumPct += branches[xi].ytdPct;
+      sumLin += branches[xi].linPct;
+      sumYoy += branches[xi].yoy_chg;
+    }
+    var n = branches.length || 1;
+    var avgPct = Math.round(sumPct / n);
+    var avgYoy = Math.round(sumYoy / n * 10) / 10;
+    var mainVal;
+    if (view === 'ytd') { mainVal = '₪' + totYtd.toFixed(1) + 'M'; }
+    else if (view === 'mtd') { mainVal = '₪' + totMtd.toFixed(2) + 'M'; }
+    else if (view === 'pct' || view === 'lin') { mainVal = avgPct + '%'; }
+    else { mainVal = (avgYoy >= 0 ? '+' : '') + avgYoy + '%'; }
+    result.push({label: worldDefs[wi].label, icon: worldDefs[wi].icon, color: worldDefs[wi].color, mainVal: mainVal, pct: avgPct});
+  }
+  var allYtd = 0, allMtd = 0, allPctSum = 0;
+  for (var ai = 0; ai < execBranches.length; ai++) {
+    allYtd += execBranches[ai].ytd_p;
+    allMtd += execBranches[ai].mtd_p;
+    allPctSum += execBranches[ai].ytdPct;
+  }
+  var allPct = Math.round(allPctSum / execBranches.length);
+  var totMain;
+  if (view === 'ytd') { totMain = '₪' + allYtd.toFixed(1) + 'M'; }
+  else if (view === 'mtd') { totMain = '₪' + allMtd.toFixed(2) + 'M'; }
+  else { totMain = allPct + '%'; }
+  result.push({label:'סה"כ', icon:'📊', color:'#1a4a8a', mainVal: totMain, pct: allPct});
+  return result;
+}
+
+function renderExecKPIs() {
+  var grid = document.getElementById('exec-kpi-grid');
+  if (!grid) { return; }
+  var totals = worldTotals(currentExecView);
+  var html = '';
+  for (var i = 0; i < totals.length; i++) {
+    var t = totals[i];
+    var isTotal = (i === totals.length - 1);
+    var bgStyle = isTotal ? ';background:#f0f9ff' : '';
+    html += '<div class="kpi-card" style="border-color:' + t.color + bgStyle + '">';
+    html += '<div class="icon">' + t.icon + '</div>';
+    html += '<div class="label">' + t.label + '</div>';
+    html += '<div class="value" style="color:' + pctColor(t.pct) + '">' + t.mainVal + '</div>';
+    html += '<div class="sub">' + t.pct + '% עמידה ביעד</div>';
+    html += '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function renderExecBranchTable() {
+  var tbody = document.getElementById('exec-branch-rows');
+  var colMain = document.getElementById('exec-col-main');
+  var colSec = document.getElementById('exec-col-sec');
+  var colLin = document.getElementById('exec-col-lin');
+  var colYoy = document.getElementById('exec-col-yoy');
+  if (!tbody) { return; }
+  var v = currentExecView;
+  var mainLabels = {ytd:'YTD (₪M)', mtd:'MTD (₪M)', pct:'% עמידה ביעד', lin:'קצב לינארי %', yoy:'שינוי מאשתקד'};
+  var secLabels = {ytd:'יעד שנתי', mtd:'יעד חודשי', pct:'קצב לינארי %', lin:'% עמידה ביעד', yoy:'% עמידה ביעד'};
+  if (colMain) { colMain.textContent = mainLabels[v] || 'YTD (₪M)'; }
+  if (colSec) { colSec.textContent = secLabels[v] || 'יעד שנתי'; }
+  if (colLin) { colLin.textContent = 'קצב לינארי %'; }
+  if (colYoy) { colYoy.textContent = 'מול אשתקד'; }
+  var html = '';
+  for (var i = 0; i < execBranches.length; i++) {
+    var b = execBranches[i];
+    var vals = branchViewVals(b, v);
+    html += '<tr>';
+    html += '<td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + b.color + ';margin-left:6px"></span>' + b.name + '</td>';
+    html += '<td>' + vals.main + '</td>';
+    html += '<td>' + vals.sec + '</td>';
+    html += '<td>' + progBar(vals.pct) + '</td>';
+    html += '<td><span style="color:' + pctColor(vals.lin) + ';font-weight:700">' + vals.lin + '%</span></td>';
+    html += '<td>' + fmtYoy(vals.yoy) + '</td>';
+    html += '<td>' + progBar(vals.ren, vals.ren >= 80 ? '#16a34a' : '#ea580c') + '</td>';
+    html += '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function renderExecHeatmap() {
+  var el = document.getElementById('exec-heatmap');
+  if (!el) { return; }
+  var html = '';
+  for (var i = 0; i < execBranches.length; i++) {
+    var b = execBranches[i];
+    var pct = b.ytdPct;
+    var bg = pct >= 75 ? '#dcfce7' : (pct >= 50 ? '#ffedd5' : '#fee2e2');
+    var tc = pct >= 75 ? '#166534' : (pct >= 50 ? '#92400e' : '#991b1b');
+    html += '<div class="heat-cell" style="background:' + bg + ';color:' + tc + '">';
+    html += '<div>' + b.name + '</div>';
+    html += '<div style="font-size:1rem;margin-top:4px">' + pct + '%</div>';
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderExecAlerts() {
+  var el = document.getElementById('exec-alerts');
+  if (!el) { return; }
+  var html = '';
+  for (var i = 0; i < execBranches.length; i++) {
+    var b = execBranches[i];
+    if (b.ytdPct < 50) {
+      html += '<div class="alert-item alert-danger"><span class="al-icon">🚨</span><span>' + b.name + ': עמידה ביעד ' + b.ytdPct + '% — קריטי</span></div>';
+    } else if (b.ytdPct < 70) {
+      html += '<div class="alert-item alert-warn"><span class="al-icon">⚠️</span><span>' + b.name + ': עמידה ביעד ' + b.ytdPct + '% — דורש תשומת לב</span></div>';
+    } else if (b.ytdPct >= 75 && b.yoy_chg > 5) {
+      html += '<div class="alert-item alert-success"><span class="al-icon">✅</span><span>' + b.name + ': ' + b.ytdPct + '% עמידה ביעד עם צמיחה של +' + b.yoy_chg + '% מאשתקד</span></div>';
+    }
+  }
+  if (!html) {
+    html = '<div class="alert-item alert-info"><span class="al-icon">ℹ️</span><span>אין התראות פעילות</span></div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderExecLinearChart() {
+  var el = document.getElementById('exec-linear-chart');
+  if (!el) { return; }
+  var html = '';
+  for (var i = 0; i < execBranches.length; i++) {
+    var b = execBranches[i];
+    var actualW = Math.min(b.ytdPct, 100);
+    var linW = Math.min(b.linPct, 100);
+    var c = pctColor(b.ytdPct);
+    html += '<div class="lin-chart-row">';
+    html += '<span class="lin-branch-name">' + b.name + '</span>';
+    html += '<div class="lin-bar-wrap">';
+    html += '<div class="lin-bar-fill" style="width:' + actualW + '%;background:' + c + '"></div>';
+    html += '<div class="lin-marker" style="right:' + (100 - linW) + '%"></div>';
+    html += '</div>';
+    html += '<span class="lin-vals">' + b.ytdPct + '% / ' + b.linPct + '%</span>';
+    html += '</div>';
+  }
+  html += '<div style="font-size:.7rem;color:#64748b;margin-top:6px">פס = ביצוע בפועל | קו = קצב לינארי</div>';
+  el.innerHTML = html;
+}
+
+function renderExecQualityCards() {
+  var el = document.getElementById('exec-quality-cards');
+  if (!el) { return; }
+  var html = '';
+  html += '<div class="quality-card">';
+  html += '<h4>🚗 רכב</h4>';
+  html += '<div class="metric-row"><span class="metric-label">מוסכים מוסדרים</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:78%;background:#dc2626"></div></div><span class="metric-val">78%</span></div>';
+  html += '<div class="metric-row"><span class="metric-label">רוכבים</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:41%;background:#f87171"></div></div><span class="metric-val">41%</span></div>';
+  html += '<div style="font-size:.72rem;color:#64748b;margin-top:6px">ממוצע רוכבים בענף: 67%</div>';
+  html += '</div>';
+  html += '<div class="quality-card">';
+  html += '<h4>🏠 דירות</h4>';
+  html += '<div class="metric-row"><span class="metric-label">שרברב הסדר</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:52%;background:#16a34a"></div></div><span class="metric-val">52%</span></div>';
+  html += '<div class="metric-row"><span class="metric-label">רעידת אדמה</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:74%;background:#16a34a"></div></div><span class="metric-val">74%</span></div>';
+  html += '<div class="metric-row"><span class="metric-label">קומת ביניים</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:30%;background:#ea580c"></div></div><span class="metric-val">207 vs 683</span></div>';
+  html += '</div>';
+  html += '<div class="quality-card">';
+  html += '<h4>🏢 עסקים</h4>';
+  html += '<div class="metric-row"><span class="metric-label">נישות</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:71%;background:#7c3aed"></div></div><span class="metric-val">71%</span></div>';
+  html += '<div class="metric-row"><span class="metric-label">בתי עסק</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:54%;background:#a78bfa"></div></div><span class="metric-val">54%</span></div>';
+  html += '<div class="metric-row"><span class="metric-label">קבלנים</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:16%;background:#dc2626"></div></div><span class="metric-val">16%</span></div>';
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function setExecView(v, btn) {
+  currentExecView = v;
+  var btns = document.querySelectorAll('#exec-view-toggle button');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('active');
+  }
+  if (btn) { btn.classList.add('active'); }
+  renderExecKPIs();
+  renderExecBranchTable();
+  renderExecHeatmap();
+  renderExecAlerts();
+}
+
+function renderExecScreen() {
+  renderExecKPIs();
+  renderExecBranchTable();
+  renderExecHeatmap();
+  renderExecAlerts();
+  renderExecLinearChart();
+  renderExecQualityCards();
+}
+
+function renderScreen1() {
+  var tbody = document.getElementById('s1-rows');
+  var traffic = document.getElementById('s1-traffic');
+  if (!tbody) { return; }
+  var html = '';
+  var totWp = 0, totQty = 0, totWp25 = 0, totQty25 = 0;
+  var totPPct = 0, totQPct = 0, totLin = 0, totRen = 0;
+  for (var i = 0; i < s1RowsData.length; i++) {
+    var r = s1RowsData[i];
+    totWp += r.wp; totQty += r.qty; totWp25 += r.wp25; totQty25 += r.qty25;
+    totPPct += r.pPct; totQPct += r.qPct; totLin += r.lin; totRen += r.ren;
+    html += '<tr>';
+    html += '<td style="font-weight:600">' + r.name + '</td>';
+    html += '<td>₪' + r.wp + 'M</td>';
+    html += '<td>' + r.qty.toLocaleString() + '</td>';
+    html += '<td>₪' + r.wp25 + 'M</td>';
+    html += '<td>' + r.qty25.toLocaleString() + '</td>';
+    html += '<td>' + pctBadge(r.pPct, r.name) + '</td>';
+    html += '<td>' + pctBadge(r.qPct, r.name) + '</td>';
+    html += '<td><span style="color:' + pctColor(r.lin) + ';font-weight:700">' + r.lin + '%</span></td>';
+    html += '<td>' + progBar(r.ren, r.ren >= 80 ? '#16a34a' : '#ea580c') + '</td>';
+    html += '</tr>';
+  }
+  var n = s1RowsData.length;
+  html += '<tr class="tbl-total">';
+  html += '<td>סה"כ</td>';
+  html += '<td>₪' + totWp.toFixed(1) + 'M</td>';
+  html += '<td>' + totQty.toLocaleString() + '</td>';
+  html += '<td>₪' + totWp25.toFixed(2) + 'M</td>';
+  html += '<td>' + totQty25.toLocaleString() + '</td>';
+  html += '<td>' + pctBadge(Math.round(totPPct / n)) + '</td>';
+  html += '<td>' + pctBadge(Math.round(totQPct / n)) + '</td>';
+  html += '<td><span style="color:' + pctColor(Math.round(totLin / n)) + ';font-weight:700">' + Math.round(totLin / n) + '%</span></td>';
+  html += '<td>' + progBar(Math.round(totRen / n), '#16a34a') + '</td>';
+  html += '</tr>';
+  tbody.innerHTML = html;
+
+  if (traffic) {
+    var thtml = '';
+    for (var j = 0; j < s1RowsData.length; j++) {
+      var row = s1RowsData[j];
+      var c = row.pPct >= 90 ? '#16a34a' : (row.pPct >= 70 ? '#ea580c' : '#dc2626');
+      thtml += '<div class="tl-item"><div class="tl-dot" style="background:' + c + '"></div><span>' + row.name + '</span></div>';
+    }
+    traffic.innerHTML = thtml;
+  }
+}
+
+function renderAgents() {
+  var topBody = document.getElementById('s2-top-body');
+  var botBody = document.getElementById('s2-bot-body');
+  if (!topBody || !botBody) { return; }
+
+  function agentRow(a) {
+    var cls = segClasses[a.seg] || 'seg-none';
+    var lbl = segLabels[a.seg] || '—';
+    var safeName = a.name.replace(/'/g, "\\'");
+    return '<tr style="cursor:pointer" onclick="openAgent(\'' + safeName + '\',\'' + a.seg + '\')">' +
+      '<td>' + a.rank + '</td>' +
+      '<td style="font-weight:600">' + a.name + '</td>' +
+      '<td style="font-size:.75rem;color:#64748b">' + a.agency + '</td>' +
+      '<td><span class="' + cls + '">' + lbl + '</span></td>' +
+      '<td>' + pctBadge(a.pPct) + '</td>' +
+      '<td>' + pctBadge(a.qPct) + '</td>' +
+      '<td>' + a.contrib + '%</td>' +
+      '<td>' + progBar(a.ren, a.ren >= 80 ? '#16a34a' : '#ea580c') + '</td>' +
+      '</tr>';
+  }
+
+  var topHtml = '';
+  for (var i = 0; i < agentsTop.length; i++) { topHtml += agentRow(agentsTop[i]); }
+  topBody.innerHTML = topHtml;
+
+  var botHtml = '';
+  for (var j = 0; j < agentsBottom.length; j++) { botHtml += agentRow(agentsBottom[j]); }
+  botBody.innerHTML = botHtml;
+}
+
+renderAgents();
+renderS0Screen();
+renderExecScreen();
+renderScreen1();
+</script>
+</body>
+</html>
