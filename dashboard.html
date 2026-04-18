@@ -318,6 +318,10 @@ tr:hover td{background:#f8fafc}
     </div>
     <div class="sub-title">איכות פורטפוליו</div>
     <div class="grid3" id="exec-quality-cards"></div>
+    <div class="sub-title" style="margin-top:20px">🚗 זירת החידושים — רכב לפי סגמנטים</div>
+    <div class="panel" style="margin-bottom:20px">
+      <div id="exec-car-segments-heatmap"></div>
+    </div>
   </div>
 </div>
 
@@ -434,141 +438,321 @@ tr:hover td{background:#f8fafc}
       <button class="world-tab" onclick="showWorld('biz',this)">🏢 עסקים</button>
     </div>
 
+    <!-- ══════════════════════════════════════════
+         עולם הרכב
+    ══════════════════════════════════════════ -->
     <div id="s3-world-car">
-      <div class="grid2">
-        <div class="panel">
-          <h4>רכב חובה</h4>
-          <div style="font-size:.78rem;color:var(--muted);margin-bottom:8px">יחס חובה/רכוש</div>
-          <div class="metric-row">
-            <span class="metric-label">סוכן</span>
-            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:72%;background:#dc2626"></div></div>
-            <span class="metric-val">0.72</span>
+
+      <!-- רכב חובה — ענף 20 -->
+      <div class="panel" style="margin-bottom:14px;border-right:4px solid #f87171">
+        <h4 style="color:#b91c1c">🚦 רכב חובה — ענף 20</h4>
+        <div style="font-size:.8rem;font-weight:700;color:var(--text);margin:10px 0 6px">ס.א. — יחס כמויות חובה מול רכוש</div>
+        <div style="font-size:.75rem;color:var(--muted);margin-bottom:8px">מצפים לקשר חיובי וזהה: כל לקוח רכוש אמור לרוב להחזיק גם בפוליסת חובה</div>
+        <div class="grid2" style="gap:10px;margin-bottom:10px">
+          <div style="background:#f8fafc;border-radius:8px;padding:12px;text-align:center;border:1px solid #e2e8f0">
+            <div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">פוליסות חובה (ענף 20)</div>
+            <div style="font-size:1.5rem;font-weight:900;color:#b91c1c">142</div>
           </div>
-          <div class="metric-row">
-            <span class="metric-label">ממוצע חברה</span>
-            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:85%;background:#94a3b8"></div></div>
-            <span class="metric-val">0.85</span>
-          </div>
-          <div class="alert-item alert-warn" style="margin-top:8px;font-size:.78rem"><span class="al-icon">⚠️</span><span>יחס חובה נמוך מממוצע החברה — מומלץ לחזק</span></div>
-          <div class="coll-grid">
-            <div class="coll-cell"><div class="cv">142</div><div class="cl">פוליסות חובה</div></div>
-            <div class="coll-cell"><div class="cv">₪3.8M</div><div class="cl">פרמיה YTD</div></div>
-            <div class="coll-cell"><div class="cv">87%</div><div class="cl">חידושים</div></div>
-            <div class="coll-cell"><div class="cv">4.2%</div><div class="cl">תביעות</div></div>
+          <div style="background:#f8fafc;border-radius:8px;padding:12px;text-align:center;border:1px solid #e2e8f0">
+            <div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">פוליסות רכוש (ענף 25+125)</div>
+            <div style="font-size:1.5rem;font-weight:900;color:#1a4a8a">198</div>
           </div>
         </div>
-        <div class="panel">
-          <h4>רכב רכוש</h4>
-          <div style="font-size:.78rem;color:var(--muted);margin-bottom:6px">מוסכים מוסדרים</div>
+        <div style="margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:3px"><span>יחס סוכן (חובה÷רכוש)</span><span style="font-weight:700;color:#dc2626">0.72</span></div>
+          <div class="prog-bar" style="height:10px"><div class="prog-fill" style="width:72%;background:#dc2626"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:.75rem;margin-top:6px;margin-bottom:3px"><span>יחס ממוצע חברה</span><span style="font-weight:700;color:#64748b">0.85</span></div>
+          <div class="prog-bar" style="height:10px"><div class="prog-fill" style="width:85%;background:#94a3b8"></div></div>
+        </div>
+        <div class="alert-item alert-danger" style="font-size:.78rem"><span class="al-icon">🚨</span><span>יחס חובה/רכוש נמוך (0.72 מול ממוצע 0.85) — ייתכן שחלק מלקוחות הרכוש אינם מבוטחים בחובה במגדל. מומלץ לבדוק ולצלב.</span></div>
+        <div class="coll-grid" style="margin-top:10px">
+          <div class="coll-cell"><div class="cv">142</div><div class="cl">פוליסות חובה</div></div>
+          <div class="coll-cell"><div class="cv">₪3.8M</div><div class="cl">פרמיה YTD</div></div>
+          <div class="coll-cell"><div class="cv">87%</div><div class="cl">חידושים</div></div>
+          <div class="coll-cell"><div class="cv">4.2%</div><div class="cl">תביעות</div></div>
+        </div>
+      </div>
+
+      <!-- רכב רכוש — ענף 25, 125 -->
+      <div class="panel" style="margin-bottom:14px;border-right:4px solid #dc2626">
+        <h4 style="color:#991b1b">🔧 רכב רכוש — ענף 25, 125</h4>
+
+        <!-- מוסכי הסדר -->
+        <div style="background:#fafafa;border-radius:8px;padding:12px;margin-bottom:12px;border:1px solid #e2e8f0">
+          <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:6px">🔩 מוסכי הסדר</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">% תביעות רכוש שהופנו למוסכי הסדר של מגדל</div>
           <div class="metric-row">
-            <span class="metric-label">סוכן</span>
-            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:78%;background:#dc2626"></div></div>
-            <span class="metric-val">78%</span>
+            <span class="metric-label" style="min-width:100px">סוכן 2026</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:78%;background:#16a34a"></div></div>
+            <span class="metric-val" style="color:#16a34a;font-weight:700">78%</span>
           </div>
           <div class="metric-row">
-            <span class="metric-label">שנה קודמת</span>
-            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:72%;background:#f87171"></div></div>
-            <span class="metric-val">72%</span>
+            <span class="metric-label" style="min-width:100px">סוכן 2025</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:72%;background:#2563eb"></div></div>
+            <span class="metric-val" style="color:#2563eb;font-weight:700">72%</span>
           </div>
           <div class="metric-row">
-            <span class="metric-label">ממוצע חברה</span>
+            <span class="metric-label" style="min-width:100px">ממוצע חברה</span>
             <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:71%;background:#94a3b8"></div></div>
-            <span class="metric-val">71%</span>
+            <span class="metric-val" style="color:#64748b">71%</span>
           </div>
-          <div style="font-size:.78rem;color:var(--muted);margin-top:12px;margin-bottom:6px">רוכבים — 41% (ממוצע: 67%)</div>
-          <div class="alert-item alert-danger" style="margin-bottom:8px;font-size:.78rem"><span class="al-icon">🚨</span><span>אחוז רוכבים נמוך מהממוצע — 41% מול 67%</span></div>
-          <div class="rider-detail">
-            <div class="rider-row"><span>זכוכית</span><span style="color:var(--red);font-weight:700">18%</span></div>
-            <div class="rider-row"><span>גרירה</span><span style="color:var(--orange);font-weight:700">22%</span></div>
-            <div class="rider-row"><span>רכב חלופי</span><span style="color:var(--red);font-weight:700">15%</span></div>
-            <div class="rider-row"><span>אובדן שימוש</span><span style="color:var(--green);font-weight:700">48%</span></div>
-            <div class="rider-row"><span>הרחבה לחו"ל</span><span style="color:var(--orange);font-weight:700">31%</span></div>
+          <div class="alert-item alert-success" style="font-size:.75rem;margin-top:6px"><span class="al-icon">✅</span><span>מעל ממוצע החברה (+7%) ומגמת שיפור מאשתקד (+6%)</span></div>
+        </div>
+
+        <!-- ריידרים -->
+        <div style="background:#fafafa;border-radius:8px;padding:12px;border:1px solid #e2e8f0">
+          <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:2px">🎯 ריידרים — חבילת שירותים</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">% פוליסות רכוש עם ריידר | ממוצע חברה: 67%</div>
+          <div class="alert-item alert-danger" style="font-size:.75rem;margin-bottom:8px"><span class="al-icon">🚨</span><span>אחוז ריידרים כולל: 41% — נמוך משמעותית מממוצע החברה (67%)</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <div style="background:#fff;border-radius:6px;padding:8px;border:1px solid #f1f5f9">
+              <div style="font-size:.7rem;color:var(--muted)">גרירה</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+                <div class="prog-bar" style="height:7px;flex:1"><div class="prog-fill" style="width:22%;background:#dc2626"></div></div>
+                <span style="font-size:.78rem;font-weight:700;color:#dc2626">22%</span>
+              </div>
+              <div style="font-size:.65rem;color:#94a3b8">ממוצע: 58%</div>
+            </div>
+            <div style="background:#fff;border-radius:6px;padding:8px;border:1px solid #f1f5f9">
+              <div style="font-size:.7rem;color:var(--muted)">רכב חליפי</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+                <div class="prog-bar" style="height:7px;flex:1"><div class="prog-fill" style="width:15%;background:#dc2626"></div></div>
+                <span style="font-size:.78rem;font-weight:700;color:#dc2626">15%</span>
+              </div>
+              <div style="font-size:.65rem;color:#94a3b8">ממוצע: 62%</div>
+            </div>
+            <div style="background:#fff;border-radius:6px;padding:8px;border:1px solid #f1f5f9">
+              <div style="font-size:.7rem;color:var(--muted)">שמשות</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+                <div class="prog-bar" style="height:7px;flex:1"><div class="prog-fill" style="width:18%;background:#dc2626"></div></div>
+                <span style="font-size:.78rem;font-weight:700;color:#dc2626">18%</span>
+              </div>
+              <div style="font-size:.65rem;color:#94a3b8">ממוצע: 71%</div>
+            </div>
+            <div style="background:#fff;border-radius:6px;padding:8px;border:1px solid #f1f5f9">
+              <div style="font-size:.7rem;color:var(--muted)">פנסים ומראות</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+                <div class="prog-bar" style="height:7px;flex:1"><div class="prog-fill" style="width:12%;background:#dc2626"></div></div>
+                <span style="font-size:.78rem;font-weight:700;color:#dc2626">12%</span>
+              </div>
+              <div style="font-size:.65rem;color:#94a3b8">ממוצע: 49%</div>
+            </div>
           </div>
-          <div class="coll-grid" style="margin-top:10px">
-            <div class="coll-cell"><div class="cv">198</div><div class="cl">פוליסות רכוש</div></div>
-            <div class="coll-cell"><div class="cv">₪5.2M</div><div class="cl">פרמיה YTD</div></div>
-            <div class="coll-cell"><div class="cv">83%</div><div class="cl">חידושים</div></div>
-            <div class="coll-cell"><div class="cv">6.1%</div><div class="cl">תביעות</div></div>
-          </div>
+        </div>
+
+        <div class="coll-grid" style="margin-top:12px">
+          <div class="coll-cell"><div class="cv">198</div><div class="cl">פוליסות רכוש</div></div>
+          <div class="coll-cell"><div class="cv">₪5.2M</div><div class="cl">פרמיה YTD</div></div>
+          <div class="coll-cell"><div class="cv">83%</div><div class="cl">חידושים</div></div>
+          <div class="coll-cell"><div class="cv">6.1%</div><div class="cl">תביעות</div></div>
         </div>
       </div>
     </div>
 
+    <!-- ══════════════════════════════════════════
+         עולם הדירות
+    ══════════════════════════════════════════ -->
     <div id="s3-world-apt" style="display:none">
-      <div class="grid2">
-        <div class="panel">
-          <h4>דירה 180 — ניתוח פורטפוליו</h4>
-          <div style="font-size:.78rem;color:var(--muted);margin-bottom:6px">סכום ביטוח / אחודות</div>
+
+      <!-- דירה רגילה — ענף 180 -->
+      <div class="panel" style="margin-bottom:14px;border-right:4px solid #16a34a">
+        <h4 style="color:#14532d">🏠 דירה רגילה — ענף 180</h4>
+
+        <!-- שרברב הסדר -->
+        <div style="background:#fafafa;border-radius:8px;padding:12px;margin-bottom:12px;border:1px solid #e2e8f0">
+          <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:4px">🔧 שרברב הסדר</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">% פוליסות דירה הכוללות ריידר תיקון נזקי צנרת ע״י שרברב הסדר</div>
           <div class="metric-row">
-            <span class="metric-label">SA ממוצע</span>
-            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:68%;background:#16a34a"></div></div>
-            <span class="metric-val">₪1.2M</span>
+            <span class="metric-label" style="min-width:100px">סוכן 2026</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:52%;background:#ea580c"></div></div>
+            <span class="metric-val" style="color:#ea580c;font-weight:700">52%</span>
           </div>
           <div class="metric-row">
-            <span class="metric-label">אחודות</span>
-            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:45%;background:#ea580c"></div></div>
-            <span class="metric-val">45%</span>
+            <span class="metric-label" style="min-width:100px">סוכן 2025</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:48%;background:#2563eb"></div></div>
+            <span class="metric-val" style="color:#2563eb;font-weight:700">48%</span>
           </div>
-          <div style="font-size:.78rem;color:var(--muted);margin-top:10px;margin-bottom:6px">שרברב</div>
-          <div class="metric-row"><span class="metric-label">הסדר</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:52%;background:#16a34a"></div></div><span class="metric-val">52%</span></div>
-          <div class="metric-row"><span class="metric-label">פרטי</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:31%;background:#ea580c"></div></div><span class="metric-val">31%</span></div>
-          <div class="metric-row"><span class="metric-label">ללא</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:17%;background:#dc2626"></div></div><span class="metric-val">17%</span></div>
-          <div style="font-size:.78rem;color:var(--muted);margin-top:10px;margin-bottom:6px">רעידת אדמה (ר"א)</div>
-          <div class="metric-row"><span class="metric-label">2026</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:74%;background:#1a4a8a"></div></div><span class="metric-val">74%</span></div>
-          <div class="metric-row"><span class="metric-label">2025</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:68%;background:#2563eb"></div></div><span class="metric-val">68%</span></div>
-          <div class="metric-row"><span class="metric-label">ממוצע</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:71%;background:#94a3b8"></div></div><span class="metric-val">71%</span></div>
-          <div style="font-size:.78rem;color:var(--muted);margin-top:10px;margin-bottom:6px">קומת ביניים</div>
-          <div class="box-compare">
-            <div class="cmp-box" style="background:#fee2e2"><div class="cv" style="color:var(--red)">207</div><div class="cl" style="color:var(--red)">סוכן</div></div>
-            <div class="cmp-box" style="background:#f1f5f9"><div class="cv" style="color:var(--muted)">683</div><div class="cl" style="color:var(--muted)">ממוצע</div></div>
+          <div class="metric-row">
+            <span class="metric-label" style="min-width:100px">ממוצע חברה</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:71%;background:#94a3b8"></div></div>
+            <span class="metric-val" style="color:#64748b">71%</span>
           </div>
-          <div class="coll-grid" style="margin-top:10px">
-            <div class="coll-cell"><div class="cv">180</div><div class="cl">פוליסות דירה</div></div>
-            <div class="coll-cell"><div class="cv">₪2.1M</div><div class="cl">פרמיה YTD</div></div>
-            <div class="coll-cell"><div class="cv">91%</div><div class="cl">חידושים</div></div>
-            <div class="coll-cell"><div class="cv">2.8%</div><div class="cl">תביעות</div></div>
-          </div>
+          <div class="alert-item alert-warn" style="font-size:.75rem;margin-top:6px"><span class="al-icon">⚠️</span><span>מתחת לממוצע החברה ב-19 נק׳ — פוטנציאל מכירתי לא מנוצל. מגמה: שיפור קל (+4% מאשתקד)</span></div>
         </div>
-        <div class="panel">
-          <h4>משכנתא 328</h4>
-          <div class="metric-row"><span class="metric-label">סוכן YTD</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:82%;background:#16a34a"></div></div><span class="metric-val">₪3.4M</span></div>
-          <div class="metric-row"><span class="metric-label">2025</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:75%;background:#94a3b8"></div></div><span class="metric-val">₪3.1M</span></div>
-          <div class="alert-item alert-success" style="margin-top:8px;font-size:.78rem"><span class="al-icon">✅</span><span>גידול של 9.7% במשכנתאות מאשתקד</span></div>
-          <div class="coll-grid" style="margin-top:10px">
-            <div class="coll-cell"><div class="cv">328</div><div class="cl">פוליסות משכנתא</div></div>
-            <div class="coll-cell"><div class="cv">₪3.4M</div><div class="cl">פרמיה YTD</div></div>
-            <div class="coll-cell"><div class="cv">94%</div><div class="cl">חידושים</div></div>
-            <div class="coll-cell"><div class="cv">1.2%</div><div class="cl">תביעות</div></div>
+
+        <!-- ר"א -->
+        <div style="background:#fafafa;border-radius:8px;padding:12px;margin-bottom:12px;border:1px solid #e2e8f0">
+          <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:4px">🌍 רעידת אדמה (ר״א)</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">% פוליסות דירה עם כיסוי רעידת אדמה</div>
+          <div class="metric-row">
+            <span class="metric-label" style="min-width:100px">סוכן 2026</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:74%;background:#16a34a"></div></div>
+            <span class="metric-val" style="color:#16a34a;font-weight:700">74%</span>
           </div>
+          <div class="metric-row">
+            <span class="metric-label" style="min-width:100px">סוכן 2025</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:68%;background:#2563eb"></div></div>
+            <span class="metric-val" style="color:#2563eb;font-weight:700">68%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label" style="min-width:100px">ממוצע חברה</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:71%;background:#94a3b8"></div></div>
+            <span class="metric-val" style="color:#64748b">71%</span>
+          </div>
+          <div class="alert-item alert-success" style="font-size:.75rem;margin-top:6px"><span class="al-icon">✅</span><span>מעל ממוצע החברה (+3%) ומגמת שיפור (+6% מאשתקד)</span></div>
+        </div>
+
+        <!-- קומת ביניים -->
+        <div style="background:#fafafa;border-radius:8px;padding:12px;border:1px solid #e2e8f0">
+          <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:4px">🏢 קומת ביניים</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:10px">מתוך 180 פוליסות דירה — כמה מוגדרות כ״קומת ביניים״?</div>
+          <div style="display:flex;gap:10px;margin-bottom:8px">
+            <div style="flex:1;background:#dcfce7;border-radius:8px;padding:10px;text-align:center">
+              <div style="font-size:1.4rem;font-weight:900;color:#16a34a">23</div>
+              <div style="font-size:.68rem;color:#16a34a;margin-top:2px">קומת ביניים</div>
+              <div style="font-size:.65rem;color:#64748b">12.8% מהפוליסות</div>
+            </div>
+            <div style="flex:1;background:#f1f5f9;border-radius:8px;padding:10px;text-align:center">
+              <div style="font-size:1.4rem;font-weight:900;color:#64748b">157</div>
+              <div style="font-size:.68rem;color:#64748b;margin-top:2px">ללא קומת ביניים</div>
+              <div style="font-size:.65rem;color:#94a3b8">87.2% מהפוליסות</div>
+            </div>
+          </div>
+          <div style="font-size:.72rem;color:var(--muted)">ממוצע חברה: 18.4% | הסוכן מתחת לממוצע</div>
+        </div>
+
+        <div class="coll-grid" style="margin-top:12px">
+          <div class="coll-cell"><div class="cv">180</div><div class="cl">פוליסות דירה</div></div>
+          <div class="coll-cell"><div class="cv">₪2.1M</div><div class="cl">פרמיה YTD</div></div>
+          <div class="coll-cell"><div class="cv">91%</div><div class="cl">חידושים</div></div>
+          <div class="coll-cell"><div class="cv">2.8%</div><div class="cl">תביעות</div></div>
+        </div>
+      </div>
+
+      <!-- מבנה משכנתא — ענף 328 -->
+      <div class="panel" style="margin-bottom:14px;border-right:4px solid #0891b2">
+        <h4 style="color:#0e7490">🏦 מבנה משכנתא — ענף 328</h4>
+        <div class="metric-row">
+          <span class="metric-label" style="min-width:100px">סוכן YTD 2026</span>
+          <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:82%;background:#16a34a"></div></div>
+          <span class="metric-val" style="color:#16a34a;font-weight:700">₪3.4M</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label" style="min-width:100px">YTD 2025</span>
+          <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:75%;background:#94a3b8"></div></div>
+          <span class="metric-val" style="color:#64748b">₪3.1M</span>
+        </div>
+        <div class="alert-item alert-success" style="font-size:.78rem;margin-top:8px"><span class="al-icon">✅</span><span>גידול של 9.7% מאשתקד במשכנתאות</span></div>
+        <div class="coll-grid" style="margin-top:10px">
+          <div class="coll-cell"><div class="cv">328</div><div class="cl">פוליסות משכנתא</div></div>
+          <div class="coll-cell"><div class="cv">₪3.4M</div><div class="cl">פרמיה YTD</div></div>
+          <div class="coll-cell"><div class="cv">94%</div><div class="cl">חידושים</div></div>
+          <div class="coll-cell"><div class="cv">1.2%</div><div class="cl">תביעות</div></div>
         </div>
       </div>
     </div>
 
+    <!-- ══════════════════════════════════════════
+         עולם העסקים
+    ══════════════════════════════════════════ -->
     <div id="s3-world-biz" style="display:none">
-      <div class="grid2">
-        <div class="panel">
-          <h4>נישות</h4>
-          <div class="metric-row"><span class="metric-label">סוכן YTD</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:88%;background:#6d28d9"></div></div><span class="metric-val">₪1.4M</span></div>
-          <div class="metric-row"><span class="metric-label">2025</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:77%;background:#94a3b8"></div></div><span class="metric-val">₪1.26M</span></div>
-          <div class="alert-item alert-success" style="margin-top:8px;font-size:.78rem"><span class="al-icon">✅</span><span>גידול +11% בנישות מאשתקד</span></div>
-          <div class="coll-grid" style="margin-top:10px">
-            <div class="coll-cell"><div class="cv">67</div><div class="cl">פוליסות נישות</div></div>
-            <div class="coll-cell"><div class="cv">₪1.4M</div><div class="cl">פרמיה YTD</div></div>
-            <div class="coll-cell"><div class="cv">79%</div><div class="cl">חידושים</div></div>
-            <div class="coll-cell"><div class="cv">5.3%</div><div class="cl">תביעות</div></div>
+
+      <!-- נישות — ענף 650, 550 -->
+      <div class="panel" style="margin-bottom:14px;border-right:4px solid #6d28d9">
+        <h4 style="color:#5b21b6">⚡ נישות — ענף 650, 550</h4>
+        <div class="metric-row">
+          <span class="metric-label" style="min-width:100px">סוכן YTD 2026</span>
+          <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:88%;background:#6d28d9"></div></div>
+          <span class="metric-val" style="color:#6d28d9;font-weight:700">₪1.4M</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label" style="min-width:100px">YTD 2025</span>
+          <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:77%;background:#94a3b8"></div></div>
+          <span class="metric-val" style="color:#64748b">₪1.26M</span>
+        </div>
+        <div class="alert-item alert-success" style="font-size:.78rem;margin-top:8px"><span class="al-icon">✅</span><span>גידול +11% בנישות מאשתקד — ביצוע מצוין</span></div>
+        <div class="coll-grid" style="margin-top:10px">
+          <div class="coll-cell"><div class="cv">67</div><div class="cl">פוליסות נישות</div></div>
+          <div class="coll-cell"><div class="cv">₪1.4M</div><div class="cl">פרמיה YTD</div></div>
+          <div class="coll-cell"><div class="cv">79%</div><div class="cl">חידושים</div></div>
+          <div class="coll-cell"><div class="cv">5.3%</div><div class="cl">תביעות</div></div>
+        </div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:8px;padding:5px 8px;background:#f8fafc;border-radius:6px">ענפים: 650 (נישות כלליות), 550 (נישות מיוחדות)</div>
+      </div>
+
+      <!-- עסק מרחבי — ענף 150, 850, 950, 152, 450 -->
+      <div class="panel" style="margin-bottom:14px;border-right:4px solid #7c3aed">
+        <h4 style="color:#6d28d9">🏢 עסק מרחבי — ענף 150, 850, 950, 152, 450</h4>
+        <div class="metric-row">
+          <span class="metric-label" style="min-width:100px">סוכן YTD 2026</span>
+          <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:62%;background:#dc2626"></div></div>
+          <span class="metric-val" style="color:#dc2626;font-weight:700">₪2.1M</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label" style="min-width:100px">YTD 2025</span>
+          <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:72%;background:#94a3b8"></div></div>
+          <span class="metric-val" style="color:#64748b">₪2.44M</span>
+        </div>
+        <div class="alert-item alert-danger" style="font-size:.78rem;margin-top:8px"><span class="al-icon">🚨</span><span>ירידה של 14% מאשתקד — נדרשת בחינה מיידית</span></div>
+        <div class="coll-grid" style="margin-top:10px">
+          <div class="coll-cell"><div class="cv">43</div><div class="cl">פוליסות עסק</div></div>
+          <div class="coll-cell"><div class="cv">₪2.1M</div><div class="cl">פרמיה YTD</div></div>
+          <div class="coll-cell"><div class="cv">62%</div><div class="cl">חידושים</div></div>
+          <div class="coll-cell"><div class="cv">8.7%</div><div class="cl">תביעות</div></div>
+        </div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:8px;padding:5px 8px;background:#f8fafc;border-radius:6px">ענפים: 150 (בתי עסק), 152 (עסק מורחב), 450 (נכסים), 850 (אחריות מקצועית), 950 (שונות)</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         מדד גבייה — מוצג בכל העולמות
+    ══════════════════════════════════════════ -->
+    <div style="margin-top:18px">
+      <div class="sub-title">💳 מדד גבייה</div>
+      <div class="panel" style="margin-top:8px">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap">
+          <div style="text-align:center;background:#dbeafe;border-radius:10px;padding:12px 20px">
+            <div style="font-size:1.6rem;font-weight:900;color:#1d4ed8">94.2%</div>
+            <div style="font-size:.72rem;color:#1d4ed8;margin-top:2px">גבייה בפועל — כלל הענפים</div>
+          </div>
+          <div style="font-size:.78rem;color:var(--muted)">ממוצע חברה: 96.1% | <span style="color:#ea580c;font-weight:700">פער: 1.9%</span></div>
+        </div>
+        <div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:8px">פירוט לפי אמצעי תשלום</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <div style="background:#f8fafc;border-radius:8px;padding:10px;text-align:center;border:1px solid #e2e8f0">
+            <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">💵 מזומן</div>
+            <div style="font-size:1.1rem;font-weight:800;color:#1e293b">8.3%</div>
+            <div style="font-size:.65rem;color:#94a3b8;margin-top:2px">מהגבייה הכוללת</div>
+          </div>
+          <div style="background:#f8fafc;border-radius:8px;padding:10px;text-align:center;border:1px solid #e2e8f0">
+            <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">🏦 העברה בנקאית</div>
+            <div style="font-size:1.1rem;font-weight:800;color:#1e293b">31.4%</div>
+            <div style="font-size:.65rem;color:#94a3b8;margin-top:2px">מהגבייה הכוללת</div>
+          </div>
+          <div style="background:#dbeafe;border-radius:8px;padding:10px;text-align:center;border:1px solid #bfdbfe">
+            <div style="font-size:.7rem;color:#1d4ed8;margin-bottom:4px">💳 אשראי</div>
+            <div style="font-size:1.1rem;font-weight:800;color:#1d4ed8">60.3%</div>
+            <div style="font-size:.65rem;color:#3b82f6;margin-top:2px">מהגבייה הכוללת</div>
           </div>
         </div>
-        <div class="panel">
-          <h4>עסק מרחבי</h4>
-          <div class="metric-row"><span class="metric-label">סוכן YTD</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:62%;background:#dc2626"></div></div><span class="metric-val">₪2.1M</span></div>
-          <div class="metric-row"><span class="metric-label">2025</span><div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:72%;background:#94a3b8"></div></div><span class="metric-val">₪2.44M</span></div>
-          <div class="alert-item alert-danger" style="margin-top:8px;font-size:.78rem"><span class="al-icon">🚨</span><span>ירידה של 14% בעסק מרחבי מאשתקד</span></div>
-          <div class="coll-grid" style="margin-top:10px">
-            <div class="coll-cell"><div class="cv">43</div><div class="cl">פוליסות עסק</div></div>
-            <div class="coll-cell"><div class="cv">₪2.1M</div><div class="cl">פרמיה YTD</div></div>
-            <div class="coll-cell"><div class="cv">62%</div><div class="cl">חידושים</div></div>
-            <div class="coll-cell"><div class="cv">8.7%</div><div class="cl">תביעות</div></div>
+        <div style="margin-top:12px">
+          <div style="font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:6px">גבייה בפועל לפי אמצעי תשלום:</div>
+          <div class="metric-row" style="margin-bottom:4px">
+            <span class="metric-label" style="min-width:120px">💵 מזומן</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:91%;background:#ea580c"></div></div>
+            <span class="metric-val" style="color:#ea580c">91%</span>
           </div>
+          <div class="metric-row" style="margin-bottom:4px">
+            <span class="metric-label" style="min-width:120px">🏦 העברה בנקאית</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:97%;background:#16a34a"></div></div>
+            <span class="metric-val" style="color:#16a34a">97%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label" style="min-width:120px">💳 אשראי</span>
+            <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:95%;background:#16a34a"></div></div>
+            <span class="metric-val" style="color:#16a34a">95%</span>
+          </div>
+          <div class="alert-item alert-warn" style="font-size:.75rem;margin-top:8px"><span class="al-icon">⚠️</span><span>אחוז גבייה במזומן נמוך (91%) — כדאי לבחון מעבר ללקוחות אלו לאשראי קבוע</span></div>
         </div>
       </div>
     </div>
@@ -643,14 +827,19 @@ var currentExecView = 'ytd';
 var currentS2Branch = 'רכב רכוש';
 
 function pctColor(v) {
-  if (v >= 90) { return '#16a34a'; }
-  if (v >= 70) { return '#ea580c'; }
+  if (v >= 75) { return '#16a34a'; }
+  if (v >= 50) { return '#ea580c'; }
   return '#dc2626';
+}
+function pctBg(v) {
+  if (v >= 75) { return '#dcfce7'; }
+  if (v >= 50) { return '#ffedd5'; }
+  return '#fee2e2';
 }
 
 function pctBadge(v, branchName) {
   var c = pctColor(v);
-  var bg = v >= 90 ? '#dcfce7' : (v >= 70 ? '#ffedd5' : '#fee2e2');
+  var bg = pctBg(v);
   var bn = branchName ? branchName.replace(/'/g, "\\'") : '';
   return '<span class="pct-badge" style="background:' + bg + ';color:' + c + '" onclick="drillToAgents(\'' + bn + '\')">' + v + '%</span>';
 }
@@ -932,7 +1121,7 @@ function worldTotals(view) {
     {key:'car',   label:'עולם הרכב',    icon:'🚗', color:'#dc2626'},
     {key:'home',  label:'עולם הדירות',  icon:'🏠', color:'#16a34a'},
     {key:'biz',   label:'עולם העסקים',  icon:'🏢', color:'#7c3aed'},
-    {key:'other', label:'אחר',          icon:'📦', color:'#6b7280'}
+    {key:'other', label:'הנדסי',         icon:'⚙️', color:'#6b7280'}
   ];
   var result = [];
   for (var wi = 0; wi < worldDefs.length; wi++) {
@@ -957,20 +1146,22 @@ function worldTotals(view) {
     else if (view === 'mtd') { mainVal = '₪' + totMtd.toFixed(2) + 'M'; }
     else if (view === 'pct' || view === 'lin') { mainVal = avgPct + '%'; }
     else { mainVal = (avgYoy >= 0 ? '+' : '') + avgYoy + '%'; }
-    result.push({label: worldDefs[wi].label, icon: worldDefs[wi].icon, color: worldDefs[wi].color, mainVal: mainVal, pct: avgPct});
+    result.push({label: worldDefs[wi].label, icon: worldDefs[wi].icon, color: worldDefs[wi].color, mainVal: mainVal, pct: avgPct, yoy: avgYoy});
   }
-  var allYtd = 0, allMtd = 0, allPctSum = 0;
+  var allYtd = 0, allMtd = 0, allPctSum = 0, allYoySum = 0;
   for (var ai = 0; ai < execBranches.length; ai++) {
     allYtd += execBranches[ai].ytd_p;
     allMtd += execBranches[ai].mtd_p;
     allPctSum += execBranches[ai].ytdPct;
+    allYoySum += execBranches[ai].yoy_chg;
   }
   var allPct = Math.round(allPctSum / execBranches.length);
+  var allYoy = Math.round(allYoySum / execBranches.length * 10) / 10;
   var totMain;
   if (view === 'ytd') { totMain = '₪' + allYtd.toFixed(1) + 'M'; }
   else if (view === 'mtd') { totMain = '₪' + allMtd.toFixed(2) + 'M'; }
   else { totMain = allPct + '%'; }
-  result.push({label:'סה"כ', icon:'📊', color:'#1a4a8a', mainVal: totMain, pct: allPct});
+  result.push({label:'סה"כ', icon:'📊', color:'#1a4a8a', mainVal: totMain, pct: allPct, yoy: allYoy});
   return result;
 }
 
@@ -983,11 +1174,19 @@ function renderExecKPIs() {
     var t = totals[i];
     var isTotal = (i === totals.length - 1);
     var bgStyle = isTotal ? ';background:#f0f9ff' : '';
+    var trendArrow, trendColor;
+    if (t.yoy > 0) { trendArrow = '↑'; trendColor = '#16a34a'; }
+    else if (t.yoy < 0) { trendArrow = '↓'; trendColor = '#dc2626'; }
+    else { trendArrow = '→'; trendColor = '#64748b'; }
     html += '<div class="kpi-card" style="border-color:' + t.color + bgStyle + '">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:flex-start">';
     html += '<div class="icon">' + t.icon + '</div>';
+    html += '<span style="font-size:1.3rem;font-weight:900;color:' + trendColor + '" title="שינוי מאשתקד: ' + (t.yoy >= 0 ? '+' : '') + t.yoy + '%">' + trendArrow + '</span>';
+    html += '</div>';
     html += '<div class="label">' + t.label + '</div>';
     html += '<div class="value" style="color:' + pctColor(t.pct) + '">' + t.mainVal + '</div>';
     html += '<div class="sub">' + t.pct + '% עמידה ביעד</div>';
+    html += '<div style="font-size:.68rem;color:' + trendColor + ';font-weight:700;margin-top:3px">' + (t.yoy >= 0 ? '+' : '') + t.yoy + '% מאשתקד</div>';
     html += '</div>';
   }
   grid.innerHTML = html;
@@ -1031,8 +1230,8 @@ function renderExecHeatmap() {
   for (var i = 0; i < execBranches.length; i++) {
     var b = execBranches[i];
     var pct = b.ytdPct;
-    var bg = pct >= 75 ? '#dcfce7' : (pct >= 50 ? '#ffedd5' : '#fee2e2');
-    var tc = pct >= 75 ? '#166534' : (pct >= 50 ? '#92400e' : '#991b1b');
+    var bg = pctBg(pct);
+    var tc = pctColor(pct);
     html += '<div class="heat-cell" style="background:' + bg + ';color:' + tc + '">';
     html += '<div>' + b.name + '</div>';
     html += '<div style="font-size:1rem;margin-top:4px">' + pct + '%</div>';
@@ -1121,6 +1320,48 @@ function setExecView(v, btn) {
   renderExecAlerts();
 }
 
+var carSegments = [
+  {seg:'100', label:'סגמנט 100', desc:'יעדי חידוש גבוהים', renewal:88, renewalTarget:90, clr:72, clrTarget:75, color:'#1a4a8a'},
+  {seg:'200', label:'סגמנט 200', desc:'יעדי חידוש בינוניים', renewal:81, renewalTarget:85, clr:68, clrTarget:70, color:'#7c3aed'},
+  {seg:'300', label:'סגמנט 300', desc:'סגמנט בעייתי', renewal:64, renewalTarget:75, clr:54, clrTarget:65, color:'#ea580c'},
+  {seg:'305', label:'סגמנט 305', desc:'סגמנט נמוך', renewal:57, renewalTarget:70, clr:49, clrTarget:60, color:'#dc2626'}
+];
+
+function renderCarSegmentsHeatmap() {
+  var el = document.getElementById('exec-car-segments-heatmap');
+  if (!el) { return; }
+  var html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">';
+  for (var i = 0; i < carSegments.length; i++) {
+    var s = carSegments[i];
+    var renPct = Math.round(s.renewal / s.renewalTarget * 100);
+    var clrPct = Math.round(s.clr / s.clrTarget * 100);
+    var renBg = pctBg(renPct);
+    var renCol = pctColor(renPct);
+    var clrBg = pctBg(clrPct);
+    var clrCol = pctColor(clrPct);
+    html += '<div style="border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.1);border-top:4px solid ' + s.color + '">';
+    html += '<div style="background:' + s.color + ';color:#fff;padding:8px 12px;font-weight:700;font-size:.85rem">' + s.label + '</div>';
+    html += '<div style="padding:10px 12px;background:#fafafa;font-size:.72rem;color:#64748b;margin-bottom:6px">' + s.desc + '</div>';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 10px 12px">';
+    html += '<div style="background:' + renBg + ';border-radius:8px;padding:10px;text-align:center">';
+    html += '<div style="font-size:.65rem;color:#64748b;margin-bottom:4px">% חידוש</div>';
+    html += '<div style="font-size:1.2rem;font-weight:900;color:' + renCol + '">' + s.renewal + '%</div>';
+    html += '<div style="font-size:.62rem;color:#94a3b8;margin-top:2px">יעד: ' + s.renewalTarget + '%</div>';
+    html += '<div style="font-size:.65rem;font-weight:700;color:' + renCol + '">' + renPct + '% מהיעד</div>';
+    html += '</div>';
+    html += '<div style="background:' + clrBg + ';border-radius:8px;padding:10px;text-align:center">';
+    html += '<div style="font-size:.65rem;color:#64748b;margin-bottom:4px">CLR ביצוע</div>';
+    html += '<div style="font-size:1.2rem;font-weight:900;color:' + clrCol + '">' + s.clr + '%</div>';
+    html += '<div style="font-size:.62rem;color:#94a3b8;margin-top:2px">יעד: ' + s.clrTarget + '%</div>';
+    html += '<div style="font-size:.65rem;font-weight:700;color:' + clrCol + '">' + clrPct + '% מהיעד</div>';
+    html += '</div>';
+    html += '</div></div>';
+  }
+  html += '</div>';
+  html += '<div style="font-size:.72rem;color:#64748b;margin-top:10px;padding:6px 10px;background:#f8fafc;border-radius:6px;border-right:3px solid #1a4a8a">CLR = Combined Loss Ratio | ירוק ≥75% מהיעד | כתום 50%–75% | אדום מתחת ל-50%</div>';
+  el.innerHTML = html;
+}
+
 function renderExecScreen() {
   renderExecKPIs();
   renderExecBranchTable();
@@ -1128,6 +1369,7 @@ function renderExecScreen() {
   renderExecAlerts();
   renderExecLinearChart();
   renderExecQualityCards();
+  renderCarSegmentsHeatmap();
 }
 
 function renderScreen1() {
