@@ -171,8 +171,7 @@ tr:hover td{background:#f8fafc}
 <div class="header">
   <div class="logo">מגדל <span>ביטוח</span></div>
   <nav class="nav">
-    <button class="active" onclick="showScreen(0,this)">תמונת על</button>
-    <button onclick="showScreen('exec',this)">מבט הנהלה — אלמנטר</button>
+    <button class="active" onclick="showScreen('exec',this)">מבט הנהלה — אלמנטר</button>
     <button onclick="showScreen(1,this)">ביצועים</button>
     <button onclick="showScreen(2,this)">סוכנים</button>
     <button onclick="showScreen(3,this)">פרופיל סוכן</button>
@@ -219,61 +218,8 @@ tr:hover td{background:#f8fafc}
   <input type="text" placeholder="חיפוש חופשי...">
 </div>
 
-<!-- SCREEN 0 -->
-<div class="screen active" id="screen0">
-  <div class="main">
-    <div class="screen-header">
-      <h2>תמונת על — הנהלה</h2>
-      <div class="view-toggle" id="s0-view-toggle">
-        <button class="active" onclick="setS0View('mtd',this)">MTD</button>
-        <button onclick="setS0View('ytd',this)">YTD</button>
-        <button onclick="setS0View('pct',this)">% עמידה ביעד</button>
-        <button onclick="setS0View('yoy',this)">מול אשתקד</button>
-      </div>
-    </div>
-    <div id="s0-kpi-grid" class="kpi-grid"></div>
-    <div class="grid2">
-      <div class="panel">
-        <h4>התפלגות פרמיה (YTD) — תרשים עוגה</h4>
-        <svg id="s0-pie-svg" width="220" height="220" viewBox="0 0 220 220"></svg>
-        <div id="s0-pie-legend" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px"></div>
-      </div>
-      <div class="panel">
-        <h4>רווחיות לפי ענף</h4>
-        <div id="s0-profit-bars"></div>
-      </div>
-    </div>
-    <div class="panel" style="margin-bottom:20px">
-      <h4>התראות</h4>
-      <div class="alerts">
-        <div class="alert-item alert-danger"><span class="al-icon">🚨</span><span>רכב רכוש: עמידה ביעד 68.1% — מתחת ל-70%</span></div>
-        <div class="alert-item alert-danger"><span class="al-icon">🚨</span><span>דירה: עמידה ביעד 78.1% — צפי לפספוס שנתי</span></div>
-        <div class="alert-item alert-warn"><span class="al-icon">⚠️</span><span>בריאות: ירידה מאשתקד 2.1% — דורש תשומת לב</span></div>
-        <div class="alert-item alert-success"><span class="al-icon">✅</span><span>פנסיה וגמל: 106.6% מהיעד — מעל היעד!</span></div>
-      </div>
-    </div>
-    <div class="panel">
-      <h4>ביצועים לפי ענף</h4>
-      <div class="tbl-wrap" style="margin-top:10px">
-        <table>
-          <thead>
-            <tr>
-              <th>ענף</th>
-              <th id="s0-col-main">MTD (₪M)</th>
-              <th>יעד שנתי</th>
-              <th>% עמידה</th>
-              <th>מול אשתקד</th>
-            </tr>
-          </thead>
-          <tbody id="s0-branch-rows"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- SCREEN EXEC -->
-<div class="screen" id="screenexec">
+<div class="screen active" id="screenexec">
   <div class="main">
     <div class="screen-header">
       <h2>מבט הנהלה — ענפי אלמנטר</h2>
@@ -386,7 +332,7 @@ tr:hover td{background:#f8fafc}
   <div class="main">
     <div class="screen-header">
       <div>
-        <button class="back-btn" onclick="showScreen(1,document.querySelectorAll('.nav button')[2])">חזרה לביצועים</button>
+        <button class="back-btn" onclick="showScreen(1,document.querySelectorAll('.nav button')[1])">חזרה לביצועים</button>
         <h2 id="s2-title">סוכנים — רכב רכוש</h2>
       </div>
     </div>
@@ -425,7 +371,7 @@ tr:hover td{background:#f8fafc}
 <!-- SCREEN 3 -->
 <div class="screen" id="screen3">
   <div class="main">
-    <button class="back-btn" onclick="showScreen(2,document.querySelectorAll('.nav button')[3])">חזרה לסוכנים</button>
+    <button class="back-btn" onclick="showScreen(2,document.querySelectorAll('.nav button')[2])">חזרה לסוכנים</button>
     <div class="screen-header">
       <div>
         <h2 id="s3-name">פרופיל סוכן</h2>
@@ -856,7 +802,7 @@ function progBar(pct, color) {
   return '<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:' + w + '%;background:' + c + '"></div></div><span class="prog-lbl" style="color:' + c + '">' + pct + '%</span></div>';
 }
 
-var navMap = {'0':0, 'exec':1, '1':2, '2':3, '3':4};
+var navMap = {'exec':0, '1':1, '2':2, '3':3};
 
 function showScreen(n, btn) {
   var screens = document.querySelectorAll('.screen');
@@ -873,7 +819,6 @@ function showScreen(n, btn) {
   }
   if (n === 2) { renderAgents(); }
   if (n === 'exec') { renderExecScreen(); }
-  if (n === 0) { renderS0Screen(); }
 }
 
 function drillToAgents(name) {
@@ -881,7 +826,7 @@ function drillToAgents(name) {
   var el = document.getElementById('s2-title');
   if (el) { el.textContent = 'סוכנים — ' + currentS2Branch; }
   var navBtns = document.querySelectorAll('.nav button');
-  showScreen(2, navBtns[3]);
+  showScreen(2, navBtns[2]);
 }
 
 function openAgent(name, seg) {
@@ -894,7 +839,7 @@ function openAgent(name, seg) {
     sb.innerHTML = '<span class="' + cls + '">' + lbl + '</span>';
   }
   var navBtns = document.querySelectorAll('.nav button');
-  showScreen(3, navBtns[4]);
+  showScreen(3, navBtns[3]);
 }
 
 function showWorld(w, btn) {
