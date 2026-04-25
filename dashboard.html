@@ -190,6 +190,13 @@ tr:hover td{background:#f8fafc}
   body{background:#fff}
 }
 
+
+.al-toggle{position:relative;display:inline-block;width:36px;height:20px}
+.al-toggle input{opacity:0;width:0;height:0}
+.al-slider{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:20px;transition:.3s}
+.al-slider:before{content:'';position:absolute;height:14px;width:14px;right:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+.al-toggle input:checked + .al-slider{background:#16a34a}
+.al-toggle input:checked + .al-slider:before{transform:translateX(-16px)}
 </style>
 </head>
 <body>
@@ -200,7 +207,8 @@ tr:hover td{background:#f8fafc}
     <button class="active" onclick="showScreen('exec',this)">מבט הנהלה — אלמנטר</button>
     <button onclick="showScreen(1,this)">ביצועים</button>
     <button onclick="showScreen(2,this)">סוכנים</button>
-    <button onclick="showScreen(3,this)">פרופיל סוכן</button>
+    <button onclick="showScreen(3,this)">👤 פרופיל סוכן</button>
+    <button onclick="showScreen('alerts',this)">⚙️ התראות</button>
   </nav>
 </div>
 
@@ -375,7 +383,7 @@ tr:hover td{background:#f8fafc}
         <div class="sub-title">10 מובילים</div>
         <div class="tbl-wrap">
           <table>
-            <thead><tr><th>#</th><th>שם</th><th>סוכנות</th><th>סגמנט</th><th>% פרמיה</th><th>% כמות</th><th>תרומה %</th><th>חידוש %</th></tr></thead>
+            <thead><tr><th>#</th><th>שם</th><th>סוכנות</th><th>מפקח</th><th>% פרמיה</th><th>% כמות</th><th>תרומה %</th><th>חידוש %</th></tr></thead>
             <tbody id="s2-top-body"></tbody>
           </table>
         </div>
@@ -384,7 +392,7 @@ tr:hover td{background:#f8fafc}
         <div class="sub-title">10 נמוכים</div>
         <div class="tbl-wrap">
           <table>
-            <thead><tr><th>#</th><th>שם</th><th>סוכנות</th><th>סגמנט</th><th>% פרמיה</th><th>% כמות</th><th>תרומה %</th><th>חידוש %</th></tr></thead>
+            <thead><tr><th>#</th><th>שם</th><th>סוכנות</th><th>מפקח</th><th>% פרמיה</th><th>% כמות</th><th>תרומה %</th><th>חידוש %</th></tr></thead>
             <tbody id="s2-bot-body"></tbody>
           </table>
         </div>
@@ -839,7 +847,6 @@ tr:hover td{background:#f8fafc}
       <div style="margin-top:10px;background:#f8fafc;border-radius:8px;padding:10px 14px;display:flex;gap:24px;flex-wrap:wrap">
         <div><span style="font-size:.7rem;color:#64748b">סוכן: </span><span style="font-size:.88rem;font-weight:800;color:#1e293b">יוסי כץ</span></div>
         <div><span style="font-size:.7rem;color:#64748b">סוכנות: </span><span style="font-size:.88rem;font-weight:700;color:#1e293b">מגן אור</span></div>
-        <div><span style="font-size:.7rem;color:#64748b">סגמנט: </span><span style="font-size:.88rem;font-weight:700;color:#1d4ed8">בסיס</span></div>
         <div><span style="font-size:.7rem;color:#64748b">ציון מכר: </span><span style="font-size:.88rem;font-weight:700;color:#ea580c">61/100</span></div>
       </div>
     </div>
@@ -1016,29 +1023,29 @@ var s1RowsData = [
 ];
 
 var agentsTop = [
-  {rank:1,  name:'דוד לוי',     agency:'סוכנות הצלחה', seg:'growth',  pPct:142, qPct:138, contrib:8.4, ren:94},
-  {rank:2,  name:'שרה כהן',     agency:'כהן ביטוח',    seg:'growth',  pPct:131, qPct:125, contrib:7.1, ren:91},
-  {rank:3,  name:'משה ישראלי',  agency:'מגן אור',       seg:'growth',  pPct:128, qPct:119, contrib:6.8, ren:89},
-  {rank:4,  name:'רחל גולדברג', agency:'סוכנות הנגב',  seg:'improve', pPct:118, qPct:112, contrib:5.9, ren:87},
-  {rank:5,  name:'אלי אברהם',   agency:'אברהם ושות',   seg:'improve', pPct:114, qPct:108, contrib:5.4, ren:86},
-  {rank:6,  name:'מרים שפירא',  agency:'כהן ביטוח',    seg:'improve', pPct:109, qPct:103, contrib:4.9, ren:84},
-  {rank:7,  name:'יוסי כץ',     agency:'מגן אור',       seg:'basis',   pPct:104, qPct:98,  contrib:4.2, ren:82},
-  {rank:8,  name:'חנה ברק',     agency:'סוכנות הצלחה', seg:'improve', pPct:101, qPct:96,  contrib:3.8, ren:81},
-  {rank:9,  name:'אריה פרץ',    agency:'סוכנות הנגב',  seg:'basis',   pPct:98,  qPct:93,  contrib:3.4, ren:79},
-  {rank:10, name:'שמואל אדלר',  agency:'אדלר ביטוח',   seg:'basis',   pPct:96,  qPct:91,  contrib:3.1, ren:78}
+  {rank:1,  name:'דוד לוי',     agency:'סוכנות הצלחה', supervisor:'ענת כהן',    seg:'growth',  pPct:142, qPct:138, contrib:8.4, ren:94},
+  {rank:2,  name:'שרה כהן',     agency:'כהן ביטוח',    supervisor:'ענת כהן',    seg:'growth',  pPct:131, qPct:125, contrib:7.1, ren:91},
+  {rank:3,  name:'משה ישראלי',  agency:'מגן אור',       supervisor:'רון לוי',    seg:'growth',  pPct:128, qPct:119, contrib:6.8, ren:89},
+  {rank:4,  name:'רחל גולדברג', agency:'סוכנות הנגב',  supervisor:'רון לוי',    seg:'improve', pPct:118, qPct:112, contrib:5.9, ren:87},
+  {rank:5,  name:'אלי אברהם',   agency:'אברהם ושות',   supervisor:'מיכל דוד',   seg:'improve', pPct:114, qPct:108, contrib:5.4, ren:86},
+  {rank:6,  name:'מרים שפירא',  agency:'כהן ביטוח',    supervisor:'ענת כהן',    seg:'improve', pPct:109, qPct:103, contrib:4.9, ren:84},
+  {rank:7,  name:'יוסי כץ',     agency:'מגן אור',       supervisor:'רון לוי',    seg:'basis',   pPct:104, qPct:98,  contrib:4.2, ren:82},
+  {rank:8,  name:'חנה ברק',     agency:'סוכנות הצלחה', supervisor:'ענת כהן',    seg:'improve', pPct:101, qPct:96,  contrib:3.8, ren:81},
+  {rank:9,  name:'אריה פרץ',    agency:'סוכנות הנגב',  supervisor:'מיכל דוד',   seg:'basis',   pPct:98,  qPct:93,  contrib:3.4, ren:79},
+  {rank:10, name:'שמואל אדלר',  agency:'אדלר ביטוח',   supervisor:'מיכל דוד',   seg:'basis',   pPct:96,  qPct:91,  contrib:3.1, ren:78}
 ];
 
 var agentsBottom = [
-  {rank:1,  name:'נחום שטיין',  agency:'שטיין סוכנות', seg:'none',    pPct:34, qPct:31, contrib:0.8, ren:41},
-  {rank:2,  name:'בתיה מלמד',   agency:'מלמד ביטוח',   seg:'none',    pPct:38, qPct:35, contrib:0.9, ren:44},
-  {rank:3,  name:'ציון חמו',    agency:'חמו ושות',      seg:'none',    pPct:41, qPct:39, contrib:1.1, ren:48},
-  {rank:4,  name:'תמר ניר',     agency:'ניר סוכנות',   seg:'none',    pPct:44, qPct:42, contrib:1.2, ren:51},
-  {rank:5,  name:'ברוך ויס',    agency:'ויס ביטוח',    seg:'basis',   pPct:48, qPct:44, contrib:1.4, ren:54},
-  {rank:6,  name:'חיים עוז',    agency:'עוז ושות',     seg:'basis',   pPct:51, qPct:48, contrib:1.6, ren:57},
-  {rank:7,  name:'פנינה גרוס',  agency:'גרוס סוכנות',  seg:'basis',   pPct:54, qPct:52, contrib:1.7, ren:59},
-  {rank:8,  name:'אברהם סלע',   agency:'סלע ביטוח',    seg:'basis',   pPct:57, qPct:55, contrib:1.9, ren:62},
-  {rank:9,  name:'לאה בן דוד',  agency:'בן דוד סוכנות',seg:'improve', pPct:61, qPct:58, contrib:2.1, ren:65},
-  {rank:10, name:'אסתר כחלון',  agency:'כחלון ביטוח',  seg:'improve', pPct:64, qPct:61, contrib:2.3, ren:67}
+  {rank:1,  name:'נחום שטיין',  agency:'שטיין סוכנות', supervisor:'יעל ברון',   seg:'none',    pPct:34, qPct:31, contrib:0.8, ren:41},
+  {rank:2,  name:'בתיה מלמד',   agency:'מלמד ביטוח',   supervisor:'יעל ברון',   seg:'none',    pPct:38, qPct:35, contrib:0.9, ren:44},
+  {rank:3,  name:'ציון חמו',    agency:'חמו ושות',      supervisor:'מיכל דוד',   seg:'none',    pPct:41, qPct:39, contrib:1.1, ren:48},
+  {rank:4,  name:'תמר ניר',     agency:'ניר סוכנות',   supervisor:'יעל ברון',   seg:'none',    pPct:44, qPct:42, contrib:1.2, ren:51},
+  {rank:5,  name:'ברוך ויס',    agency:'ויס ביטוח',    supervisor:'מיכל דוד',   seg:'basis',   pPct:48, qPct:44, contrib:1.4, ren:54},
+  {rank:6,  name:'חיים עוז',    agency:'עוז ושות',     supervisor:'יעל ברון',   seg:'basis',   pPct:51, qPct:48, contrib:1.6, ren:57},
+  {rank:7,  name:'פנינה גרוס',  agency:'גרוס סוכנות',  supervisor:'רון לוי',    seg:'basis',   pPct:54, qPct:52, contrib:1.7, ren:59},
+  {rank:8,  name:'אברהם סלע',   agency:'סלע ביטוח',    supervisor:'רון לוי',    seg:'basis',   pPct:57, qPct:55, contrib:1.9, ren:62},
+  {rank:9,  name:'לאה בן דוד',  agency:'בן דוד סוכנות',supervisor:'מיכל דוד',   seg:'improve', pPct:61, qPct:58, contrib:2.1, ren:65},
+  {rank:10, name:'אסתר כחלון',  agency:'כחלון ביטוח',  supervisor:'יעל ברון',   seg:'improve', pPct:64, qPct:61, contrib:2.3, ren:67}
 ];
 
 var segLabels = {growth:'צמיחה', improve:'שיפור', basis:'בסיס', none:'—'};
@@ -1078,7 +1085,7 @@ function progBar(pct, color) {
   return '<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:' + w + '%;background:' + c + '"></div></div><span class="prog-lbl" style="color:' + c + '">' + pct + '%</span></div>';
 }
 
-var navMap = {'exec':0, '1':1, '2':2, '3':3};
+var navMap = {'exec':0, '1':1, '2':2, '3':3, 'alerts':4};
 
 function showScreen(n, btn) {
   var screens = document.querySelectorAll('.screen');
@@ -1095,6 +1102,7 @@ function showScreen(n, btn) {
   }
   if (n === 2) { renderAgents(); }
   if (n === 'exec') { renderExecScreen(); }
+  if (n === 'alerts') { renderAlerts(); }
 }
 
 function drillToAgents(name) {
@@ -1647,14 +1655,12 @@ function renderAgents() {
   if (!topBody || !botBody) { return; }
 
   function agentRow(a) {
-    var cls = segClasses[a.seg] || 'seg-none';
-    var lbl = segLabels[a.seg] || '—';
     var safeName = a.name.replace(/'/g, "\\'");
     return '<tr style="cursor:pointer" onclick="openAgent(\'' + safeName + '\',\'' + a.seg + '\')">' +
       '<td>' + a.rank + '</td>' +
       '<td style="font-weight:600">' + a.name + '</td>' +
       '<td style="font-size:.75rem;color:#64748b">' + a.agency + '</td>' +
-      '<td><span class="' + cls + '">' + lbl + '</span></td>' +
+      '<td style="font-size:.78rem;font-weight:600;color:#1a4a8a">' + (a.supervisor || '—') + '</td>' +
       '<td>' + pctBadge(a.pPct) + '</td>' +
       '<td>' + pctBadge(a.qPct) + '</td>' +
       '<td>' + a.contrib + '%</td>' +
@@ -1730,6 +1736,150 @@ function initTrendCharts() {
 }
 
 initTrendCharts();
+
+// ─── Alert Settings ───
+var alertDefs = [
+  {cat:'עמידה ביעדים', icon:'🎯', color:'#1a4a8a', items:[
+    {id:'a1',  label:'סוכן מתחת ל-70% מהיעד הרבעוני',        level:'סוכן',    dash:true,  mail:true,  mob:false, thresh:'70'},
+    {id:'a2',  label:'סוכנות מתחת ל-75% מהיעד',              level:'סוכנות',  dash:true,  mail:true,  mob:true,  thresh:'75'},
+    {id:'a3',  label:'ענף בירידה — מתחת ל-80% מהיעד הכולל',  level:'כולל',    dash:true,  mail:false, mob:false, thresh:'80'},
+    {id:'a4',  label:'סוכן לא יגיע ליעד בקצב הנוכחי (חיזוי)',level:'סוכן',    dash:true,  mail:true,  mob:false, thresh:''},
+  ]},
+  {cat:'קצב מכירות', icon:'📉', color:'#dc2626', items:[
+    {id:'b1',  label:'ירידה בפרמיה חודשית לעומת חודש קודם',   level:'סוכן',    dash:true,  mail:false, mob:false, thresh:'10'},
+    {id:'b2',  label:'ירידה רצופה 3 חודשים',                  level:'סוכן',    dash:true,  mail:true,  mob:true,  thresh:''},
+    {id:'b3',  label:'ירידה בכמות פוליסות חדשות >15%',        level:'סוכן',    dash:true,  mail:true,  mob:false, thresh:'15'},
+    {id:'b4',  label:'ירידה בפרמיה ברמת ענף >10%',            level:'כולל',    dash:true,  mail:true,  mob:false, thresh:'10'},
+  ]},
+  {cat:'ממדי איכות מכר', icon:'⭐', color:'#7c3aed', items:[
+    {id:'c1',  label:'ציון מכר ירד מ-60 נקודות',              level:'סוכן',    dash:true,  mail:true,  mob:false, thresh:'60'},
+    {id:'c2',  label:'יחס חובה/רכוש מתחת ל-0.8',             level:'סוכן',    dash:true,  mail:false, mob:false, thresh:'0.8'},
+    {id:'c3',  label:'ריידרים פחות מ-50% מממוצע חברה',       level:'סוכן',    dash:true,  mail:true,  mob:false, thresh:'50'},
+    {id:'c4',  label:'חידושים מתחת ל-75%',                    level:'סוכן',    dash:true,  mail:true,  mob:true,  thresh:'75'},
+    {id:'c5',  label:'CLR מעל 95% (יחס תביעות גבוה)',         level:'סוכנות',  dash:true,  mail:true,  mob:true,  thresh:'95'},
+  ]},
+  {cat:'גבייה', icon:'💳', color:'#0891b2', items:[
+    {id:'d1',  label:'גבייה כוללת מתחת ל-92%',                level:'סוכן',    dash:true,  mail:false, mob:false, thresh:'92'},
+    {id:'d2',  label:'גבייה במזומן מתחת ל-85%',               level:'סוכן',    dash:true,  mail:true,  mob:false, thresh:'85'},
+    {id:'d3',  label:'חוב פתוח מעל 60 יום',                   level:'סוכן',    dash:true,  mail:true,  mob:true,  thresh:'60'},
+    {id:'d4',  label:'פוליסות בסיכון ביטול בשל אי-גבייה',    level:'סוכן',    dash:true,  mail:true,  mob:true,  thresh:''},
+  ]},
+  {cat:'תפעול', icon:'⚙️', color:'#ea580c', items:[
+    {id:'e1',  label:'פוליסה ממתינה לחתימה >7 ימים',          level:'סוכן',    dash:true,  mail:false, mob:false, thresh:'7'},
+    {id:'e2',  label:'תביעה פתוחה >30 יום ללא עדכון',         level:'סוכן',    dash:true,  mail:true,  mob:false, thresh:'30'},
+    {id:'e3',  label:'מסמכים חסרים בפוליסה חדשה',             level:'סוכן',    dash:true,  mail:false, mob:false, thresh:''},
+    {id:'e4',  label:'שינוי חריג בתמהיל ביטחונות (סיכון חיתום)',level:'כולל', dash:true,  mail:true,  mob:false, thresh:''},
+  ]},
+  {cat:'נטישת לקוחות', icon:'🔴', color:'#b91c1c', items:[
+    {id:'f1',  label:'לקוח ביטל יותר מפוליסה אחת ב-30 יום',  level:'סוכן',    dash:true,  mail:true,  mob:false, thresh:''},
+    {id:'f2',  label:'שיעור ביטול מעל 10% ברבעון',            level:'סוכן',    dash:true,  mail:true,  mob:true,  thresh:'10'},
+    {id:'f3',  label:'לקוח VIP לא חידש (פרמיה >₪50K)',        level:'סוכן',    dash:true,  mail:true,  mob:true,  thresh:'50'},
+    {id:'f4',  label:'ענף עם שיעור נטישה גבוה מהממוצע >5%',   level:'כולל',    dash:true,  mail:true,  mob:false, thresh:'5'},
+  ]},
+  {cat:'סיכון וציות', icon:'🛡️', color:'#64748b', items:[
+    {id:'g1',  label:'סוכן עם תלונות >2 ברבעון',              level:'סוכן',    dash:true,  mail:true,  mob:true,  thresh:'2'},
+    {id:'g2',  label:'כישלון בבדיקת AML/רגולציה',            level:'סוכן',    dash:true,  mail:true,  mob:true,  thresh:''},
+    {id:'g3',  label:'שינוי חריג בדפוס מכירות (חשד הונאה)',   level:'כולל',    dash:true,  mail:true,  mob:true,  thresh:''},
+  ]},
+];
+
+var alertState = {};
+(function initAlerts(){
+  for (var c=0; c<alertDefs.length; c++){
+    for (var i=0; i<alertDefs[c].items.length; i++){
+      var it = alertDefs[c].items[i];
+      alertState[it.id] = {active:true, dash:it.dash, mail:it.mail, mob:it.mob, thresh:it.thresh};
+    }
+  }
+})();
+
+function renderAlerts() {
+  var el = document.getElementById('alerts-container');
+  if (!el) { return; }
+  var html = '';
+  for (var c=0; c<alertDefs.length; c++){
+    var cat = alertDefs[c];
+    html += '<div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:18px;overflow:hidden">';
+    html += '<div style="background:' + cat.color + ';color:#fff;padding:10px 16px;display:flex;align-items:center;gap:8px">';
+    html += '<span style="font-size:1.1rem">' + cat.icon + '</span>';
+    html += '<span style="font-weight:700;font-size:.9rem">' + cat.cat + '</span>';
+    html += '<span style="margin-right:auto;font-size:.72rem;opacity:.8">' + cat.items.length + ' התראות</span>';
+    html += '</div>';
+    html += '<div style="padding:0 4px">';
+    html += '<table style="width:100%;border-collapse:collapse;font-size:.8rem">';
+    html += '<thead><tr style="background:#f8fafc">';
+    html += '<th style="padding:8px 12px;text-align:right;font-weight:700;color:var(--muted);border-bottom:1px solid #e2e8f0;width:40%">התראה</th>';
+    html += '<th style="padding:8px;text-align:center;color:var(--muted);border-bottom:1px solid #e2e8f0;width:10%">רמה</th>';
+    html += '<th style="padding:8px;text-align:center;color:var(--muted);border-bottom:1px solid #e2e8f0;width:10%">פעיל</th>';
+    html += '<th style="padding:8px;text-align:center;color:var(--muted);border-bottom:1px solid #e2e8f0;width:10%">📊</th>';
+    html += '<th style="padding:8px;text-align:center;color:var(--muted);border-bottom:1px solid #e2e8f0;width:10%">📧</th>';
+    html += '<th style="padding:8px;text-align:center;color:var(--muted);border-bottom:1px solid #e2e8f0;width:10%">📱</th>';
+    html += '<th style="padding:8px;text-align:center;color:var(--muted);border-bottom:1px solid #e2e8f0;width:10%">סף</th>';
+    html += '</tr></thead><tbody>';
+    for (var i=0; i<cat.items.length; i++){
+      var it = cat.items[i];
+      var st = alertState[it.id];
+      var rowBg = i%2===0 ? '#fff' : '#fafafa';
+      html += '<tr style="background:' + rowBg + ';opacity:' + (st.active ? '1' : '.45') + '">';
+      html += '<td style="padding:9px 12px;font-weight:' + (st.active?'500':'400') + '">' + it.label + '</td>';
+      var lvlColor = it.level==='סוכן' ? '#1a4a8a' : (it.level==='סוכנות' ? '#7c3aed' : '#64748b');
+      var lvlBg = it.level==='סוכן' ? '#dbeafe' : (it.level==='סוכנות' ? '#ede9fe' : '#f1f5f9');
+      html += '<td style="padding:9px 8px;text-align:center"><span style="font-size:.68rem;background:' + lvlBg + ';color:' + lvlColor + ';padding:2px 6px;border-radius:8px;font-weight:700">' + it.level + '</span></td>';
+      html += '<td style="padding:9px 8px;text-align:center"><label class="al-toggle"><input type="checkbox" ' + (st.active?'checked':'') + ' onchange="toggleAlert(\'' + it.id + '\',\'active\',this.checked)"><span class="al-slider"></span></label></td>';
+      html += '<td style="padding:9px 8px;text-align:center"><input type="checkbox" ' + (st.dash?'checked':'') + ' onchange="toggleAlert(\'' + it.id + '\',\'dash\',this.checked)" style="width:16px;height:16px;cursor:pointer"></td>';
+      html += '<td style="padding:9px 8px;text-align:center"><input type="checkbox" ' + (st.mail?'checked':'') + ' onchange="toggleAlert(\'' + it.id + '\',\'mail\',this.checked)" style="width:16px;height:16px;cursor:pointer"></td>';
+      html += '<td style="padding:9px 8px;text-align:center"><input type="checkbox" ' + (st.mob?'checked':'') + ' onchange="toggleAlert(\'' + it.id + '\',\'mob\',this.checked)" style="width:16px;height:16px;cursor:pointer"></td>';
+      var threshVal = st.thresh || '';
+      html += '<td style="padding:9px 8px;text-align:center">' + (threshVal!=='' ? '<input type="number" value="' + threshVal + '" onchange="setThresh(\'' + it.id + '\',this.value)" style="width:54px;border:1px solid #e2e8f0;border-radius:4px;padding:3px 5px;font-size:.75rem;text-align:center;font-family:inherit">' : '<span style="color:#cbd5e1;font-size:.75rem">—</span>') + '</td>';
+      html += '</tr>';
+    }
+    html += '</tbody></table></div></div>';
+  }
+  el.innerHTML = html;
+}
+
+function toggleAlert(id, field, val) {
+  if (alertState[id]) { alertState[id][field] = val; renderAlerts(); }
+}
+function setThresh(id, val) {
+  if (alertState[id]) { alertState[id].thresh = val; }
+}
+function resetAlerts() {
+  (function initAlerts(){
+    for (var c=0; c<alertDefs.length; c++){
+      for (var i=0; i<alertDefs[c].items.length; i++){
+        var it = alertDefs[c].items[i];
+        alertState[it.id] = {active:true, dash:it.dash, mail:it.mail, mob:it.mob, thresh:it.thresh};
+      }
+    }
+  })();
+  renderAlerts();
+}
+
 </script>
+
+<!-- SCREEN ALERTS -->
+<div class="screen" id="screenalerts">
+  <div class="main">
+    <div class="section-title">⚙️ הגדרות התראות — מנהל</div>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:20px">הפעל, כבה והגדר לכל התראה: האם תוצג בדאשבורד, תישלח במייל או בנייד. ניתן להגדיר סף לכל התראה.</p>
+
+    <!-- Legend -->
+    <div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:.75rem;color:var(--muted);font-weight:600">ערוצים:</span>
+      <span style="font-size:.75rem;background:#dbeafe;color:#1d4ed8;padding:3px 10px;border-radius:10px;font-weight:700">📊 דאשבורד</span>
+      <span style="font-size:.75rem;background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:10px;font-weight:700">📧 מייל</span>
+      <span style="font-size:.75rem;background:#fef3c7;color:#b45309;padding:3px 10px;border-radius:10px;font-weight:700">📱 נייד</span>
+    </div>
+
+    <div id="alerts-container"></div>
+
+    <div style="margin-top:24px;padding:14px 18px;background:#f0f9ff;border-radius:10px;border:1px solid #bae6fd;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:.82rem;color:#0369a1;font-weight:600">שינויים נשמרים אוטומטית בסשן הנוכחי</span>
+      <button onclick="resetAlerts()" style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 16px;font-size:.8rem;cursor:pointer;font-family:inherit;color:var(--muted)">אפס להגדרות ברירת מחדל</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
